@@ -1,292 +1,73 @@
-# First version of the constraint grammar configuration.
-# This config is intended to be read by prompt-generation, VLM-checker,
-# and prompt-repair scripts. It may be revised after initial experiments.
+# Grammar configuration for CS348K checkpoint 1.
+# This config is intentionally small and controlled. It can be expanded later
+# after the first batch of generated images and labels.
 
-vocabulary:
-  objects:
-    - cup
-    - book
-    - apple
-    - ball
-    - box
-    - toy car
+objects:
+  - cup
+  - book
+  - apple
+  - ball
+  - box
+  - toy car
 
-  colors:
-    - red
-    - blue
-    - green
-    - yellow
+colors:
+  - red
+  - blue
+  - green
+  - yellow
 
-  numbers:
-    - 2
-    - 3
-    - 4
+numbers:
+  - 2
+  - 3
+  - 4
 
-  scene_contexts:
-    simple:
-      prefix: "A clean front-facing image of"
-      contexts:
-        - "on a clean tabletop"
-        - "on a plain white background"
-        - "on a clean floor"
-    natural:
-      prefix: "A realistic image of"
-      contexts:
-        - "in a kitchen"
-        - "in a park"
-        - "in a living room"
+relations:
+  left_of:
+    text: "to the left of"
+    object_1_region: "left side"
+    object_2_region: "right side"
+  right_of:
+    text: "to the right of"
+    object_1_region: "right side"
+    object_2_region: "left side"
+  above:
+    text: "above"
+    object_1_region: "upper part"
+    object_2_region: "lower part"
+  below:
+    text: "below"
+    object_1_region: "lower part"
+    object_2_region: "upper part"
 
-  spatial_relations:
-    left_of:
-      text: "to the left of"
-      object_1_region: "the left side of the image"
-      object_2_region: "the right side of the image"
-    right_of:
-      text: "to the right of"
-      object_1_region: "the right side of the image"
-      object_2_region: "the left side of the image"
-    above:
-      text: "above"
-      object_1_region: "the upper part of the image"
-      object_2_region: "the lower part of the image"
-    below:
-      text: "below"
-      object_1_region: "the lower part of the image"
-      object_2_region: "the upper part of the image"
+scene_contexts:
+  simple:
+    prefix: "A clean front-facing image of"
+    contexts:
+      - "on a clean tabletop"
+      - "on a plain white background"
+      - "on a clean floor"
+  natural:
+    prefix: "A realistic image of"
+    contexts:
+      - "in a kitchen"
+      - "in a park"
+      - "in a living room"
 
-# Prompt-level families are used to generate prompt text.
-prompt_templates:
-  cardinality:
-    template: "{prefix} exactly {number} {object_plural} {scene_context}."
-    atomic_constraints:
-      - object_existence
-      - cardinality
+checkpoint1_counts:
+  spatial_single: 20
+  cardinality_single: 10
+  attribute_single: 10
+  combined_attribute_spatial: 10
+  combined_cardinality_spatial: 10
 
-  attribute_binding:
-    template: "{prefix} a {color_1} {object_1} next to a {color_2} {object_2} {scene_context}."
-    atomic_constraints:
-      - object_existence_object_1
-      - object_existence_object_2
-      - attribute_object_1
-      - attribute_object_2
+templates:
+  spatial_single: "{prefix} a {object_1} {relation_text} a {object_2} {scene_context}."
+  cardinality_single: "{prefix} exactly {number} {object_plural} {scene_context}."
+  attribute_single: "{prefix} a {color_1} {object_1} next to a {color_2} {object_2} {scene_context}."
+  combined_attribute_spatial: "{prefix} a {color_1} {object_1} {relation_text} a {color_2} {object_2} {scene_context}."
+  combined_cardinality_spatial: "{prefix} exactly {number} {object_1_plural} {relation_text} a {object_2} {scene_context}."
 
-  spatial_layout:
-    template: "{prefix} a {object_1} {relation_text} a {object_2} {scene_context}."
-    atomic_constraints:
-      - object_existence_object_1
-      - object_existence_object_2
-      - spatial_relation
-
-  combined_attribute_spatial:
-    template: "{prefix} a {color_1} {object_1} {relation_text} a {color_2} {object_2} {scene_context}."
-    atomic_constraints:
-      - object_existence_object_1
-      - object_existence_object_2
-      - attribute_object_1
-      - attribute_object_2
-      - spatial_relation
-
-  combined_cardinality_attribute:
-    template: "{prefix} exactly {number} {color} {object_plural} {scene_context}."
-    atomic_constraints:
-      - object_existence
-      - cardinality
-      - attribute_group
-
-  combined_cardinality_spatial:
-    template: "{prefix} exactly {number} {object_1_plural} {relation_text} a {object_2} {scene_context}."
-    atomic_constraints:
-      - object_existence_object_1
-      - object_existence_object_2
-      - cardinality
-      - spatial_relation
-
-  combined_cardinality_attribute_spatial:
-    template: "{prefix} exactly {number} {color_1} {object_1_plural} {relation_text} a {color_2} {object_2} {scene_context}."
-    atomic_constraints:
-      - object_existence_object_1
-      - object_existence_object_2
-      - cardinality
-      - attribute_object_1_group
-      - attribute_object_2
-      - spatial_relation
-
-# Atomic constraint definitions are used to create constraints.csv rows.
-atomic_constraint_templates:
-  object_existence:
-    type: object_existence
-    check_text: "The {object} should be clearly visible."
-
-  cardinality:
-    type: cardinality
-    check_text: "There should be exactly {number} visible {object_plural}."
-
-  attribute:
-    type: attribute
-    check_text: "The {object} should be {attribute}."
-
-  spatial_relation:
-    type: spatial_relation
-    check_text: "The {object_1} should be {relation_text} the {object_2} in the 2D image."
-
-# Human labeling criteria. These are primarily for documentation and can be displayed in annotation tools.
-labeling_rules:
-  labels:
-    - pass
-    - fail
-    - ambiguous
-
-  object_existence:
-    pass: "The object is clearly visible and identifiable."
-    fail: "The object is clearly absent."
-    ambiguous: "The object may be present but is unclear, occluded, partially visible, or not confidently identifiable."
-
-  cardinality:
-    pass: "Exactly the requested number of target objects are clearly visible."
-    fail: "The number of clearly visible target objects is clearly different from the requested number."
-    ambiguous: "The target objects are partially occluded, merged, unclear, or not visually distinct enough to count confidently."
-
-  attribute:
-    pass: "The specified object is clearly visible and has the specified attribute."
-    fail: "The object is visible but does not have the specified attribute, or the attribute is clearly attached to the wrong object."
-    ambiguous: "The object or attribute is unclear because of lighting, occlusion, color ambiguity, or image quality."
-
-  spatial_relation:
-    pass: "Both objects are clearly visible, and the specified spatial relation clearly holds in the 2D image plane."
-    fail: "Both objects are clearly visible, but the specified relation is clearly wrong, reversed, or not satisfied."
-    ambiguous: "Either object is unclear, missing, occluded, overlapping, or the viewpoint makes the spatial relation difficult to judge confidently."
-
-# VLM checker prompt templates. The scripts can compose the universal instruction with the type-specific block.
-vlm_checker:
-  universal_instruction: |
-    You are a visual constraint checker.
-
-    Your task is to judge whether the image satisfies ONE visual constraint.
-
-    Return exactly one label:
-    - pass
-    - fail
-    - ambiguous
-
-    Use "pass" only if the constraint is clearly satisfied.
-    Use "fail" if the constraint is clearly violated.
-    Use "ambiguous" if the image is unclear, objects are occluded, object identity is uncertain, or the constraint cannot be confidently judged.
-
-    Return ONLY valid JSON in the following format:
-    {
-      "label": "pass" | "fail" | "ambiguous",
-      "reason": "one short sentence"
-    }
-
-  object_existence: |
-    Constraint type: object existence
-    Constraint: A {object} should be clearly visible in the image.
-
-    Decision rules:
-    - Return "pass" if the object is clearly visible.
-    - Return "fail" if the object is clearly absent.
-    - Return "ambiguous" if the object may be present but is unclear, occluded, or not confidently identifiable.
-
-  cardinality: |
-    Constraint type: object cardinality
-    Constraint: There should be exactly {number} clearly visible {object_plural}.
-
-    Decision rules:
-    - Return "pass" if exactly {number} clearly identifiable {object_plural} are visible.
-    - Return "fail" if the number of clearly visible {object_plural} is clearly different from {number}.
-    - Return "ambiguous" if the objects are unclear, occluded, partially visible, or cannot be counted confidently.
-    - Count only clearly visible instances of the target object.
-
-  attribute: |
-    Constraint type: object attribute
-    Constraint: The {object} should be {attribute}.
-
-    Decision rules:
-    - Return "pass" if the specified object is clearly visible and has the specified attribute.
-    - Return "fail" if the object is clearly visible but does not have the specified attribute, or if the attribute is clearly attached to the wrong object.
-    - Return "ambiguous" if the object or attribute is unclear because of lighting, occlusion, or image quality.
-
-  spatial_relation: |
-    Constraint type: spatial relation
-    Constraint: The {object_1} should be {relation_text} the {object_2}.
-
-    Decision rules:
-    - Use the 2D image coordinate system from the viewer's perspective.
-    - "left" means the left side of the image.
-    - "right" means the right side of the image.
-    - "above" means higher in the image.
-    - "below" means lower in the image.
-    - Return "pass" if both objects are clearly visible and the relation clearly holds.
-    - Return "fail" if both objects are clearly visible and the relation is clearly violated.
-    - Return "ambiguous" if either object is unclear, missing, occluded, overlapping, or the relation cannot be confidently judged.
-
-# Repair templates are selected based on failed atomic constraint type.
-repair_templates:
-  object_existence: "Make the {object} clearly visible and centered in the image. The {object} should not be hidden, cropped, or occluded."
-
-  cardinality: "A simple image showing exactly {number} {object_plural} total {scene_context}. No extra {object_plural} are visible. The image should contain {number} and only {number} {object_plural}."
-
-  attribute: "The {object} must be clearly {attribute}. The {attribute} color should apply to the {object}, not to another object."
-
-  attribute_pair: "The {object_1} must be {attribute_1}. The {object_2} must be {attribute_2}. Do not swap the colors."
-
-  spatial_relation: "Use a simple front-facing layout with clearly separated objects. The {object_1} is on {object_1_region}. The {object_2} is on {object_2_region}. The objects should not overlap."
-
-  combined_numbered_requirements_prefix: "Create a simple image satisfying all of the following requirements:"
-
-# Suggested repair policy for combined prompts.
-repair_policy:
-  one_failed_atomic_constraint: "append_targeted_repair_sentence"
-  multiple_failed_atomic_constraints: "rewrite_as_numbered_atomic_requirements"
-
-# Suggested output schemas. Scripts can use these columns.
-output_schemas:
-  prompts_csv:
-    - prompt_id
-    - prompt_family
-    - scene_context_type
-    - scene_context
-    - composition
-    - prompt
-
-  constraints_csv:
-    - constraint_id
-    - prompt_id
-    - constraint_type
-    - check_text
-    - object
-    - object_1
-    - object_2
-    - attribute
-    - attribute_1
-    - attribute_2
-    - relation
-    - relation_text
-    - number
-
-  generations_csv:
-    - image_id
-    - prompt_id
-    - model_name
-    - sample_id
-    - image_path
-    - generation_status
-    - seed
-
-  human_labels_csv:
-    - image_id
-    - prompt_id
-    - constraint_id
-    - constraint_type
-    - human_label
-    - human_notes
-
-  vlm_labels_csv:
-    - image_id
-    - prompt_id
-    - constraint_id
-    - constraint_type
-    - vlm_label
-    - vlm_reason
-    - parse_status
-    - raw_response
+label_values:
+  - pass
+  - fail
+  - ambiguous
