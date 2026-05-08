@@ -14,3 +14,11 @@ This project builds a grammar-driven diagnose-and-repair pipeline for prompt adh
 
 ## Test
 Use `pytest tests` at the root directary to run all the testing functions.
+
+## Mock Image Generation
+
+The images in `/data/images/mock_model` and relative metadata in `/data/generations/generations.csv` are **not** real T2I outputs. They are intended only to test the following functions for checkpoint 1.
+
+- `create_human_label_template.py`
+- `run_vlm_checker.py`
+- `analyze_checker.py`

@@ -732,6 +732,7 @@ The grammar design should eventually produce or support the following files:
 ```text
 prompts.csv        # prompt-level information
 constraints.csv    # expected atomic constraints for each prompt
+generations.csv    # generated image metadata
 human_labels.csv   # human labels for image × constraint pairs
 vlm_labels.csv     # VLM checker labels for image × constraint pairs
 ```
