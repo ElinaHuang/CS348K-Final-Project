@@ -252,9 +252,9 @@ def generate_all(config: Dict) -> Tuple[List[Dict], List[Dict]]:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config", default="configs/grammar_config.yaml")
-    parser.add_argument("--out-prompts", default="data/prompts/prompts.csv")
-    parser.add_argument("--out-constraints", default="data/prompts/constraints.csv")
+    parser.add_argument("--config", default="../configs/grammar_config.yaml")
+    parser.add_argument("--out-prompts", default="../data/prompts/prompts.csv")
+    parser.add_argument("--out-constraints", default="../data/prompts/constraints.csv")
     args = parser.parse_args()
 
     config = load_config(args.config)
