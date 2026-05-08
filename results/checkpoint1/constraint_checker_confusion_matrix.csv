@@ -1,0 +1,4 @@
+human_label,vlm_pass,vlm_fail,vlm_ambiguous
+pass,22,1,1
+fail,1,1,0
+ambiguous,0,0,0

@@ -1,0 +1,9 @@
+image_id,prompt_id,prompt_family,scene_context_type,scene_context,composition,num_constraints,human_image_label,vlm_image_label,image_label_agreement,human_failed_constraints,vlm_failed_constraints,human_ambiguous_constraints,vlm_ambiguous_constraints
+attribute_simple_single_001_mock_model_0,attribute_simple_single_001,attribute_binding,simple,on a clean tabletop,single,4,pass,fail,False,,attribute_simple_single_001_attr_object_2,,
+cardinality_natural_single_002_mock_model_0,cardinality_natural_single_002,cardinality,natural,in a park,single,2,fail,fail,True,cardinality_natural_single_002_cardinality,cardinality_natural_single_002_cardinality,,
+cardinality_simple_single_001_mock_model_0,cardinality_simple_single_001,cardinality,simple,on a clean tabletop,single,2,pass,pass,True,,,,
+combo_attr_spatial_simple_001_mock_model_0,combo_attr_spatial_simple_001,combined_attribute_spatial,simple,on a clean tabletop,combined,5,pass,pass,True,,,,
+combo_card_spatial_simple_001_mock_model_0,combo_card_spatial_simple_001,combined_cardinality_spatial,simple,on a clean tabletop,combined,4,pass,ambiguous,False,,,,combo_card_spatial_simple_001_spatial
+spatial_natural_single_002_mock_model_0,spatial_natural_single_002,spatial_layout,natural,in a park,single,3,fail,pass,False,spatial_natural_single_002_spatial,,,
+spatial_simple_single_001_mock_model_0,spatial_simple_single_001,spatial_layout,simple,on a clean tabletop,single,3,pass,pass,True,,,,
+spatial_simple_single_003_mock_model_0,spatial_simple_single_003,spatial_layout,simple,on a clean floor,single,3,pass,pass,True,,,,

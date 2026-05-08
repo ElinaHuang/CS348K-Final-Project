@@ -1,0 +1,4 @@
+label,human_count,vlm_count
+pass,6,5
+fail,2,2
+ambiguous,0,1

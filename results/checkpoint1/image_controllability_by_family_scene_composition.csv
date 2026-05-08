@@ -1,0 +1,8 @@
+group,prompt_family,scene_context_type,composition,num_examples,human_pass_rate,human_fail_rate,human_ambiguous_rate,vlm_pass_rate,vlm_fail_rate,vlm_ambiguous_rate,agreement,failure_precision,failure_recall,failure_f1,false_pass_rate_among_human_fail,false_fail_rate_among_human_pass
+"prompt_family=attribute_binding,scene_context_type=simple,composition=single",attribute_binding,simple,single,1,1.0000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000
+"prompt_family=cardinality,scene_context_type=natural,composition=single",cardinality,natural,single,1,0.0000,1.0000,0.0000,0.0000,1.0000,0.0000,1.0000,1.0000,1.0000,1.0000,0.0000,0.0000
+"prompt_family=cardinality,scene_context_type=simple,composition=single",cardinality,simple,single,1,1.0000,0.0000,0.0000,1.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000,0.0000
+"prompt_family=combined_attribute_spatial,scene_context_type=simple,composition=combined",combined_attribute_spatial,simple,combined,1,1.0000,0.0000,0.0000,1.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000,0.0000
+"prompt_family=combined_cardinality_spatial,scene_context_type=simple,composition=combined",combined_cardinality_spatial,simple,combined,1,1.0000,0.0000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000
+"prompt_family=spatial_layout,scene_context_type=natural,composition=single",spatial_layout,natural,single,1,0.0000,1.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000,0.0000
+"prompt_family=spatial_layout,scene_context_type=simple,composition=single",spatial_layout,simple,single,2,1.0000,0.0000,0.0000,1.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000,0.0000

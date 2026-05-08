@@ -1,0 +1,11 @@
+metric,value
+num_constraint_level_examples,26
+constraint_level_overall_agreement,0.8846
+constraint_level_human_pass_rate,0.9231
+constraint_level_human_fail_rate,0.0769
+constraint_level_human_ambiguous_rate,0.0000
+num_image_level_examples,8
+image_level_agreement,0.6250
+image_level_human_pass_rate,0.7500
+image_level_human_fail_rate,0.2500
+image_level_human_ambiguous_rate,0.0000
