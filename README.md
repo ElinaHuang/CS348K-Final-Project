@@ -39,8 +39,6 @@ Atomic constraint types include:
 
 This level is mainly used for diagnosis and for identifying failed constraints that can later drive prompt repair.
 
----
-
 ### 2. Image-level checker evaluation
 
 **Goal:** evaluate whether the VLM checker can judge whether a whole generated image satisfies the prompt.
@@ -58,8 +56,6 @@ no failures, but some ambiguous    → image-level ambiguous
 - image-level VLM-human agreement
 - image-level confusion matrix
 - image-level failure detection metrics
-
----
 
 ### 3. Image-level controllability evaluation
 
