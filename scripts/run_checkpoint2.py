@@ -60,23 +60,42 @@ def main() -> None:
     parser.add_argument("--config", default="../configs/checkpoint2_config.yaml")
     parser.add_argument("--generate-full-prompts", action="store_true")
     parser.add_argument("--select-prompts", action="store_true")
+    parser.add_argument("--generate-images", action="store_true")
+    parser.add_argument("--dry-run-images", action="store_true")
     args = parser.parse_args()
 
     config = load_config(args.config)
     py = sys.executable
 
     prompt_cfg = config["prompt_subset"]
+    gen_cfg = config["generation"]
     
     if args.generate_full_prompts:
         run([
-            py, "scripts/generate_prompts.py",
-            "--config", "configs/grammar_config.yaml",
+            py, "generate_prompts.py",
+            "--config", "../configs/grammar_config.yaml",
             "--out-prompts", prompt_cfg["source_prompts"],
             "--out-constraints", prompt_cfg["source_constraints"],
         ])
 
     if args.select_prompts:
         select_prompt_subset(config)
+
+    if args.generate_images:
+        cmd = [
+            py, "generate_images.py",
+            "--prompts", prompt_cfg["out_prompts"],
+            "--out", gen_cfg["generations_csv"],
+            "--image-dir", gen_cfg["image_dir"],
+            "--model-name", gen_cfg["model_name"],
+            "--samples-per-prompt", str(gen_cfg.get("samples_per_prompt", 1)),
+            "--provider", gen_cfg.get("provider", "stub"),
+            "--size", gen_cfg.get("size", "1024x1024"),
+            "--quality", gen_cfg.get("quality", "low"),
+        ]
+        if args.dry_run_images:
+            cmd.append("--dry-run")
+        run(cmd)
 
 if __name__ == "__main__":
     main()

@@ -50,3 +50,12 @@ prompt_subset:
     - combo_card_spatial_natural_015
     - combo_card_spatial_simple_025
     - combo_card_spatial_simple_030
+
+generation:
+  provider: openai
+  model_name: gpt-image-1
+  image_dir: ../data/images/openai_checkpoint2
+  generations_csv: ../data/generations/generations_checkpoint2.csv
+  samples_per_prompt: 1
+  size: 1024x1024
+  quality: low
