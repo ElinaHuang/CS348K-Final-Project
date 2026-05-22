@@ -1,0 +1,21 @@
+prompt_id,prompt,prompt_family,scene_context_type,scene_context,composition
+spatial_simple_single_001,A clean front-facing image of a cup to the left of a book on a clean tabletop.,spatial_layout,simple,on a clean tabletop,single
+spatial_natural_single_002,A realistic image of a book to the right of a apple in a park.,spatial_layout,natural,in a park,single
+spatial_simple_single_003,A clean front-facing image of a apple above a ball on a clean floor.,spatial_layout,simple,on a clean floor,single
+spatial_natural_single_004,A realistic image of a ball below a box in a kitchen.,spatial_layout,natural,in a kitchen,single
+spatial_simple_single_005,A clean front-facing image of a box to the left of a toy car on a plain white background.,spatial_layout,simple,on a plain white background,single
+spatial_natural_single_006,A realistic image of a toy car to the right of a cup in a living room.,spatial_layout,natural,in a living room,single
+spatial_simple_single_007,A clean front-facing image of a cup above a book on a clean tabletop.,spatial_layout,simple,on a clean tabletop,single
+spatial_natural_single_008,A realistic image of a book below a apple in a park.,spatial_layout,natural,in a park,single
+spatial_simple_single_009,A clean front-facing image of a apple to the left of a ball on a clean floor.,spatial_layout,simple,on a clean floor,single
+spatial_natural_single_010,A realistic image of a ball to the right of a box in a kitchen.,spatial_layout,natural,in a kitchen,single
+combo_attr_spatial_simple_001,A clean front-facing image of a red cup to the left of a blue book on a clean tabletop.,combined_attribute_spatial,simple,on a clean tabletop,combined
+combo_attr_spatial_natural_002,A realistic image of a blue book to the right of a green apple in a park.,combined_attribute_spatial,natural,in a park,combined
+combo_attr_spatial_simple_003,A clean front-facing image of a green apple above a yellow ball on a clean floor.,combined_attribute_spatial,simple,on a clean floor,combined
+combo_attr_spatial_natural_004,A realistic image of a yellow ball below a red box in a kitchen.,combined_attribute_spatial,natural,in a kitchen,combined
+combo_attr_spatial_simple_005,A clean front-facing image of a red box to the left of a blue toy car on a plain white background.,combined_attribute_spatial,simple,on a plain white background,combined
+combo_card_spatial_simple_001,A clean front-facing image of exactly 2 cups to the left of a book on a clean tabletop.,combined_cardinality_spatial,simple,on a clean tabletop,combined
+combo_card_spatial_natural_002,A realistic image of exactly 3 books to the right of a apple in a park.,combined_cardinality_spatial,natural,in a park,combined
+combo_card_spatial_simple_003,A clean front-facing image of exactly 4 apples above a ball on a clean floor.,combined_cardinality_spatial,simple,on a clean floor,combined
+combo_card_spatial_natural_004,A realistic image of exactly 2 balls below a box in a kitchen.,combined_cardinality_spatial,natural,in a kitchen,combined
+combo_card_spatial_simple_005,A clean front-facing image of exactly 3 boxes to the left of a toy car on a plain white background.,combined_cardinality_spatial,simple,on a plain white background,combined
