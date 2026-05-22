@@ -558,93 +558,153 @@ Decision rules:
 
 ## 7. Repair Grammar
 
-Repair is constraint-type-aware. It is not a free-form rewrite. The repair rule is chosen based on the failed atomic constraint type.
+The repair grammar is designed around one principle:
 
-The first repair experiments may use human-labeled failures. Later, VLM-detected failures can be used to test whether automatic diagnosis is actionable.
+```text
+constraint-level failure triggers repair,
+image-level prompt is reconstructed for repair,
+both constraint-level and image-level repair success are evaluated.
+```
+
+A failed atomic constraint is used to diagnose what went wrong, but the repaired prompt is generated at the image level. The repaired prompt should preserve all original requirements while strengthening failed or ambiguous constraints.
+
+### 7.1 Repair Trigger Labels
+
+The grammar distinguishes between `fail` and `ambiguous` cases.
+
+#### Fail: Corrective Repair
+
+A `fail` label means the constraint is clearly violated. Repair should use a **corrective rewrite** that explicitly states what must be true and, when useful, what should be avoided.
+
+Example:
+
+```text
+The cup must be clearly to the left of the book in the 2D image. Keep the two objects separated so the relation is easy to verify.
+```
+
+#### Ambiguous: Clarification Repair
+
+An `ambiguous` label means the image does not provide enough visual evidence to confidently mark the constraint as pass or fail. Repair should use a **clarification rewrite** that improves visibility, separability, or judgeability.
+
+Example:
+
+```text
+Make the cup and the book clearly visible, separated, and not overlapping. Use a front-facing layout so the spatial relation is easy to judge.
+```
+
+For Checkpoint 2, the repair pilot uses `fail` as the trigger label. The grammar defines ambiguous repair as well, but ambiguous-triggered repair is left as a final-report extension.
 
 ---
 
-### 7.1 Object Existence Repair
+### 7.2 Repair Strategy
 
-#### Trigger
+The code supports two repair strategies.
 
-```text
-constraint_type = object_existence
-label = fail
-```
+#### `repair_all_failed`
 
-#### Repair Pattern
+One repaired prompt is generated for each failed image. All failed constraints in that image are strengthened together.
 
-```text
-Make the {object} clearly visible and centered in the image. The {object} should not be hidden, cropped, or occluded.
-```
+This strategy is image-level: it asks whether repairing all diagnosed failures can make the whole generated image satisfy all original constraints.
 
----
+#### `repair_single_target`
 
-### 7.2 Cardinality Repair
+One repaired prompt is generated for each target failed constraint. If a source image has multiple failed constraints, each failed constraint can produce its own repaired prompt.
 
-#### Trigger
+This strategy supports a more detailed final analysis of repair difficulty by constraint type.
 
-```text
-constraint_type = cardinality
-label = fail
-```
-
-#### Repair Pattern
-
-```text
-A simple image showing exactly {number} {object_plural} total {scene_context}. No extra {object_plural} are visible. The image should contain {number} and only {number} {object_plural}.
-```
-
-#### Example
-
-Original:
-
-```text
-A realistic image of exactly three cups in a kitchen.
-```
-
-Repaired:
-
-```text
-A realistic image in a kitchen showing exactly three cups total. No extra cups are visible. The image should contain three and only three cups.
-```
+Checkpoint 2 uses `repair_all_failed` by default, while keeping `repair_single_target` available in the code.
 
 ---
 
-### 7.3 Attribute Repair
+### 7.3 Repaired Prompt Construction
 
-#### Trigger
-
-```text
-constraint_type = attribute
-label = fail
-```
-
-#### Repair Pattern
+The repaired prompt is not created by pasting the original prompt and adding a vague instruction such as "fix the image." Instead, it is reconstructed from the original constraint metadata:
 
 ```text
-The {object} must be clearly {attribute}. The {attribute} color should apply to the {object}, not to another object.
+same original constraint set
++ strengthened failed constraints
++ clarity / anti-regression instructions
 ```
 
-For two-object attribute prompts:
+The format is:
 
 ```text
-The {object_1} must be {attribute_1}. The {object_2} must be {attribute_2}. Do not swap the colors.
+Create a clear image satisfying all of the following visual requirements:
+1. <requirement from original constraint 1>
+2. <requirement from original constraint 2>
+3. <strengthened instruction for failed constraint>
+...
+
+Composition guidelines:
+- Use a clear, front-facing composition.
+- Keep all relevant objects visible and separated.
+- Avoid occlusion, heavy overlap, cropped objects, or ambiguous object shapes.
+- Do not introduce extra objects that could be confused with the requested objects.
 ```
+
+This makes the repair prompt comparable to the original prompt: both come from the same underlying constraint set, but the repair prompt expresses the constraints in a more explicit and structured way.
 
 ---
 
-### 7.4 Spatial Relation Repair
+### 7.4 Constraint-Type-Specific Repair Rules
 
-#### Trigger
+#### Object Existence
+
+Fail repair:
 
 ```text
-constraint_type = spatial_relation
-label = fail
+The <object> must be clearly visible as a distinct object in the image. Do not omit it.
 ```
 
-#### Relation-to-Layout Mapping
+Ambiguous repair:
+
+```text
+Make <object> clearly visible as a distinct, unobstructed object. Avoid cropping, overlap, or ambiguous shapes.
+```
+
+#### Cardinality
+
+Fail repair:
+
+```text
+There must be exactly <N> clearly visible <object_plural> total. Do not include extra <object_plural>, and do not hide or merge any of them.
+```
+
+Ambiguous repair:
+
+```text
+Make exactly <N> clearly separated <object_plural> visible. Avoid overlap or partial objects that make counting uncertain.
+```
+
+#### Attribute Binding
+
+Fail repair:
+
+```text
+The <object> must clearly have the <attribute> attribute. Do not apply this attribute to the wrong object.
+```
+
+Ambiguous repair:
+
+```text
+Make the <attribute> attribute of <object> visually clear and unambiguous. Avoid lighting or occlusion that makes the attribute hard to judge.
+```
+
+#### Spatial Relation
+
+Fail repair:
+
+```text
+The <object_1> must be clearly <relation_text> the <object_2> in the 2D image. Keep the two objects separated so the relation is easy to verify.
+```
+
+Ambiguous repair:
+
+```text
+Make the spatial relation unambiguous: <object_1> is clearly <relation_text> <object_2>. Use a front-facing layout with separated objects and no overlap.
+```
+
+Relation-specific layout guidance can be used when available:
 
 ```text
 left_of:
@@ -664,70 +724,102 @@ below:
   object_2 → upper part of the image
 ```
 
-#### Repair Pattern
+---
+
+### 7.5 Combined-Constraint Repair
+
+For combined prompts, repair is still generated at the image level.
+
+The repaired prompt should:
+
+1. Preserve all original constraints.
+2. Strengthen the failed or ambiguous constraints.
+3. Add clarity and anti-regression guidance.
+
+Example:
 
 ```text
-Use a simple front-facing layout with clearly separated objects. The {object_1} is on the {object_1_region}. The {object_2} is on the {object_2_region}. The objects should not overlap.
-```
+Create a clear image satisfying all of the following visual requirements:
+1. The cup is clearly visible.
+2. The book is clearly visible.
+3. The cup is red.
+4. The book is blue.
+5. The cup must be clearly to the left of the book in the 2D image.
 
-#### Example
-
-Original:
-
-```text
-A realistic image of a cup to the left of a book in a kitchen.
-```
-
-Repaired:
-
-```text
-A realistic image in a kitchen with a simple front-facing layout. The cup is on the left side of the image. The book is on the right side of the image. The cup and book are clearly separated and do not overlap.
+Composition guidelines:
+- Use a clear, front-facing composition.
+- Keep the cup and book separated and not overlapping.
+- Do not swap the colors.
+- Do not introduce extra confusing objects.
 ```
 
 ---
 
-### 7.5 Combined Constraint Repair
+### 7.6 Repair Output Tables
 
-Combined prompt repair has two modes.
+Repair uses two linked tables.
 
-#### Mode A: Targeted Repair Sentence
+#### `repaired_prompts_checkpoint2.csv`
 
-If only one atomic constraint fails, append or insert a repair sentence for that specific constraint type.
-
-Example:
+One row per repair attempt:
 
 ```text
-A clean image of exactly three red cups to the left of a blue book on a table. The cups must be on the left side of the image, and the blue book must be on the right side. The objects should be clearly separated.
+repair_id
+source_image_id
+source_prompt_id
+repair_strategy
+trigger_label_source
+trigger_labels
+num_target_constraints
+target_constraint_ids
+original_prompt
+repaired_prompt
 ```
 
-#### Mode B: Numbered Atomic Requirements
+This table represents image-level repair attempts.
 
-If two or more atomic constraints fail, rewrite the prompt as explicit atomic requirements.
+#### `repair_targets_checkpoint2.csv`
 
-Example:
+One row per target constraint:
 
 ```text
-Create a simple image satisfying all of the following requirements:
-1. There are exactly three cups total.
-2. The cups are red.
-3. There is one book.
-4. The book is blue.
-5. The cups are on the left side of the image.
-6. The book is on the right side of the image.
+repair_id
+source_image_id
+source_prompt_id
+target_constraint_id
+target_constraint_type
+before_label
+repair_action
+target_constraint_text
 ```
 
-Suggested rule:
+This table makes it possible to analyze repair success by constraint type.
+
+---
+
+### 7.7 Repair Evaluation
+
+Repair is evaluated at four levels:
+
+1. **Target-constraint repair success:** whether the targeted failed constraint becomes `pass` after repair.
+2. **Image-level repair success:** whether the repaired image satisfies all original constraints.
+3. **Regression analysis:** whether repair introduces new failures among constraints that previously passed.
+4. **Repair success by constraint type:** whether some constraint types are easier or harder to repair.
+
+The main repair metrics are:
 
 ```text
-one failed atomic constraint → targeted repair sentence
-multiple failed atomic constraints → numbered atomic requirements
+target_fixed_rate
+image_fixed_rate
+regression_rate
+target_fixed_rate_by_constraint_type
 ```
 
 ---
 
 ## 8. Expected Files Produced by the Grammar Pipeline
 
-The grammar design should eventually produce or support the following files:
+The grammar design supports the following files:
 
 ```text
 prompts.csv        # prompt-level information
@@ -737,10 +829,22 @@ human_labels.csv   # human labels for image × constraint pairs
 vlm_labels.csv     # VLM checker labels for image × constraint pairs
 ```
 
+For repair experiments, it also supports:
+
+```text
+repaired_prompts_checkpoint2.csv
+repair_targets_checkpoint2.csv
+repaired_generations_checkpoint2.csv
+repaired_human_labels_checkpoint2.csv
+repair_target_results.csv
+repair_image_results.csv
+repair_success_by_constraint_type.csv
+repair_summary_metrics.csv
+```
+
 The grammar itself is stored in two forms:
 
 ```text
 docs/grammar.md              # human-readable design document
 configs/grammar_config.yaml  # machine-readable config for scripts
 ```
-
