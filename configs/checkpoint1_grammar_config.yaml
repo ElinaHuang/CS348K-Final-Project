@@ -1,0 +1,73 @@
+# Grammar configuration for CS348K checkpoint 1.
+# This config is intentionally small and controlled. It can be expanded later
+# after the first batch of generated images and labels.
+
+objects:
+  - cup
+  - book
+  - apple
+  - ball
+  - box
+  - toy car
+
+colors:
+  - red
+  - blue
+  - green
+  - yellow
+
+numbers:
+  - 2
+  - 3
+  - 4
+
+relations:
+  left_of:
+    text: "to the left of"
+    object_1_region: "left side"
+    object_2_region: "right side"
+  right_of:
+    text: "to the right of"
+    object_1_region: "right side"
+    object_2_region: "left side"
+  above:
+    text: "above"
+    object_1_region: "upper part"
+    object_2_region: "lower part"
+  below:
+    text: "below"
+    object_1_region: "lower part"
+    object_2_region: "upper part"
+
+scene_contexts:
+  simple:
+    prefix: "A clean front-facing image of"
+    contexts:
+      - "on a clean tabletop"
+      - "on a plain white background"
+      - "on a clean floor"
+  natural:
+    prefix: "A realistic image of"
+    contexts:
+      - "in a kitchen"
+      - "in a park"
+      - "in a living room"
+
+checkpoint1_counts:
+  spatial_single: 20
+  cardinality_single: 10
+  attribute_single: 10
+  combined_attribute_spatial: 10
+  combined_cardinality_spatial: 10
+
+templates:
+  spatial_single: "{prefix} a {object_1} {relation_text} a {object_2} {scene_context}."
+  cardinality_single: "{prefix} exactly {number} {object_plural} {scene_context}."
+  attribute_single: "{prefix} a {color_1} {object_1} next to a {color_2} {object_2} {scene_context}."
+  combined_attribute_spatial: "{prefix} a {color_1} {object_1} {relation_text} a {color_2} {object_2} {scene_context}."
+  combined_cardinality_spatial: "{prefix} exactly {number} {object_1_plural} {relation_text} a {object_2} {scene_context}."
+
+label_values:
+  - pass
+  - fail
+  - ambiguous

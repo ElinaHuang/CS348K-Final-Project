@@ -1,71 +1,114 @@
-# Grammar configuration for CS348K checkpoint 1.
-# This config is intentionally small and controlled. It can be expanded later
-# after the first batch of generated images and labels.
+# Active hard grammar configuration for CS348K final project.
+# This config keeps the same grammar structure, but increases difficulty by:
+# - using small, visually similar objects
+# - using pattern/material/texture attributes instead of simple colors
+# - increasing cardinality counts
+# - using stable but cluttered scene contexts
+# - replacing above/below with explicit 2D image-plane relations
+# - adding a few diagonal spatial relations
+#
+# Note: the code currently expects the key name `colors`, but the values here
+# are visual attributes more broadly: colors, materials, textures, and finishes.
+
+random_seed: 348
 
 objects:
-  - cup
-  - book
-  - apple
-  - ball
-  - box
-  - toy car
+  - metallic paper clip
+  - transparent button
+  - beige binder clip
+  - tiny coin
+  - rubber band
+  - marble
+  - die
+  - safety pin
+  - bottle cap
+  - thumbtack
+  - small washer
+  - sewing needle
 
 colors:
-  - red
-  - blue
-  - green
-  - yellow
+  - red-and-white striped
+  - blue-and-white striped
+  - black-and-white checkered
+  - polka-dotted
+  - translucent
+  - reflective metallic
+  - matte black
+  - glossy white
+  - speckled
+  - partially transparent
 
 numbers:
-  - 2
-  - 3
-  - 4
+  - 5
+  - 6
+  - 7
 
 relations:
   left_of:
     text: "to the left of"
     object_1_region: "left side"
     object_2_region: "right side"
+
   right_of:
     text: "to the right of"
     object_1_region: "right side"
     object_2_region: "left side"
-  above:
-    text: "above"
+
+  higher_than:
+    text: "higher in the image than"
     object_1_region: "upper part"
     object_2_region: "lower part"
-  below:
-    text: "below"
+
+  lower_than:
+    text: "lower in the image than"
     object_1_region: "lower part"
     object_2_region: "upper part"
+
+  upper_left_of:
+    text: "in the upper-left area relative to"
+    object_1_region: "upper-left area"
+    object_2_region: "lower-right area"
+
+  lower_right_of:
+    text: "in the lower-right area relative to"
+    object_1_region: "lower-right area"
+    object_2_region: "upper-left area"
 
 scene_contexts:
   simple:
     prefix: "A clean front-facing image of"
     contexts:
-      - "on a clean tabletop"
-      - "on a plain white background"
-      - "on a clean floor"
+      - "on a lightly cluttered tabletop"
+      - "on a plain desk with soft shadows"
+      - "on a clean surface with a few unrelated objects"
+
   natural:
     prefix: "A realistic image of"
     contexts:
-      - "in a kitchen"
-      - "in a park"
-      - "in a living room"
+      - "on a cluttered desk with many office supplies"
+      - "on a crowded kitchen counter"
+      - "on a picnic blanket with many small objects"
+      - "on a shelf full of books and decorations"
+      - "on a workbench with tools"
+      - "on a dining table with plates and utensils nearby"
+      - "on a craft table with beads and art supplies"
 
+# This key name is kept for compatibility with the current generate_prompts.py.
+# The counts are now tuned for the active hard project grammar rather than the
+# original checkpoint 1 mock setup.
 checkpoint1_counts:
-  spatial_single: 20
-  cardinality_single: 10
-  attribute_single: 10
-  combined_attribute_spatial: 10
-  combined_cardinality_spatial: 10
+  spatial_single: 30
+  cardinality_single: 30
+  attribute_single: 30
+  combined_attribute_spatial: 30
+  combined_cardinality_spatial: 30
 
 templates:
   spatial_single: "{prefix} a {object_1} {relation_text} a {object_2} {scene_context}."
-  cardinality_single: "{prefix} exactly {number} {object_plural} {scene_context}."
+  cardinality_single: "{prefix} exactly {number} small {object_plural} {scene_context}."
   attribute_single: "{prefix} a {color_1} {object_1} next to a {color_2} {object_2} {scene_context}."
   combined_attribute_spatial: "{prefix} a {color_1} {object_1} {relation_text} a {color_2} {object_2} {scene_context}."
-  combined_cardinality_spatial: "{prefix} exactly {number} {object_1_plural} {relation_text} a {object_2} {scene_context}."
+  combined_cardinality_spatial: "{prefix} exactly {number} small {object_1_plural} {relation_text} a {object_2} {scene_context}."
 
 label_values:
   - pass

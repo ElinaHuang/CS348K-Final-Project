@@ -124,3 +124,16 @@ def parse_vlm_response(raw_response: str) -> Tuple[str, str, str]:
 
 def safe_div(num: float, den: float) -> float:
     return num / den if den else 0.0
+
+def load_environment() -> None:
+    """Load local environment variables from a .env file if python-dotenv is installed.
+
+    This is useful for local development. In deployed or shell-based settings,
+    environment variables can still be provided directly through the shell.
+    """
+    try:
+        from dotenv import load_dotenv
+    except ImportError:
+        return
+
+    load_dotenv()
