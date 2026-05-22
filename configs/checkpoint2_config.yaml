@@ -12,27 +12,41 @@ prompt_subset:
   selection_mode: explicit_prompt_ids
   prompt_ids:
     # Spatial single-constraint prompts
-    - spatial_simple_single_001
-    - spatial_natural_single_002
-    - spatial_simple_single_003
-    - spatial_natural_single_004
-    - spatial_simple_single_005
+    - spatial_natural_single_001
+    - spatial_natural_single_003
     - spatial_natural_single_006
-    - spatial_simple_single_007
-    - spatial_natural_single_008
-    - spatial_simple_single_009
-    - spatial_natural_single_010
+    - spatial_natural_single_009
+    - spatial_natural_single_012
+    - spatial_natural_single_015
+    - spatial_simple_single_019
+    - spatial_simple_single_022
+    - spatial_simple_single_025
+    - spatial_simple_single_028
+
+    # Attribute single-constraint prompts
+    - attribute_natural_single_006
+    - attribute_natural_single_012
+    - attribute_natural_single_018
+    - attribute_simple_single_024
+    - attribute_simple_single_030
+
+    # Cardinality single-constraint prompts
+    - cardinality_natural_single_001
+    - cardinality_natural_single_011
+    - cardinality_natural_single_021
+    - cardinality_simple_single_026
+    - cardinality_simple_single_030
 
     # Combined attribute + spatial prompts
-    - combo_attr_spatial_simple_001
-    - combo_attr_spatial_natural_002
-    - combo_attr_spatial_simple_003
-    - combo_attr_spatial_natural_004
-    - combo_attr_spatial_simple_005
+    - combo_attr_spatial_natural_001
+    - combo_attr_spatial_natural_011
+    - combo_attr_spatial_natural_021
+    - combo_attr_spatial_simple_026
+    - combo_attr_spatial_simple_030
 
     # Combined cardinality + spatial prompts
-    - combo_card_spatial_simple_001
-    - combo_card_spatial_natural_002
-    - combo_card_spatial_simple_003
-    - combo_card_spatial_natural_004
-    - combo_card_spatial_simple_005
+    - combo_card_spatial_natural_005
+    - combo_card_spatial_natural_010
+    - combo_card_spatial_natural_015
+    - combo_card_spatial_simple_025
+    - combo_card_spatial_simple_030
