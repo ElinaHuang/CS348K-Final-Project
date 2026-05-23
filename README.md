@@ -105,3 +105,11 @@ The current Checkpoint 1 data is a mock baseline:
 - `data/labels/vlm_labels.csv` is not real VLM API output
 
 These files are included only to test the checkpoint evaluation pipeline. The next step is to replace them with real T2I-generated images and real VLM checker outputs.
+
+### Scope of the Checkpoint 2 Quantitative Pilot
+
+For this checkpoint, I define the scope as a small real-data evaluation pilot plus repair-pipeline integration. The quantitative results focus on the subset of generated images that have completed human labels and whose constraints are currently well-defined. In parallel, the repair module is integrated at the pipeline level: failed atomic constraints can be converted into structured repair prompts and repair target records, but the full before/after repair experiment is left for the next iteration after revising the spatial grammar.
+
+During preliminary human labeling, I found that the current cardinality and attribute/material constraints produce meaningful pass, fail, and ambiguous cases. In contrast, the current spatial grammar requires further revision. In particular, image-plane vertical relations such as “higher/lower in the image” do not always match natural human interpretations of physical spatial relations. Because the spatial definition is still being revised, I restrict the Checkpoint 2 quantitative results to the subset of prompts whose constraints are already well-defined and fully labeled.
+
+The excluded spatial-heavy combined prompts are kept as generated examples, but they are not included in the current quantitative metrics. In the next iteration, I will revise the spatial grammar to use more physically meaningful relations such as “on top of,” “under,” and “inside,” then rerun generation and repair on the updated prompt set.

@@ -62,6 +62,8 @@ def main() -> None:
     parser.add_argument("--select-prompts", action="store_true")
     parser.add_argument("--generate-images", action="store_true")
     parser.add_argument("--dry-run-images", action="store_true")
+    parser.add_argument("--create-human-template", action="store_true")
+    parser.add_argument("--all-pre-label", action="store_true", help="Generate prompt subset, generate images, and create human-label template.")
     args = parser.parse_args()
 
     config = load_config(args.config)
@@ -69,6 +71,13 @@ def main() -> None:
 
     prompt_cfg = config["prompt_subset"]
     gen_cfg = config["generation"]
+    label_cfg = config["human_labels"]
+
+    if args.all_pre_label:
+        args.generate_full_prompts = True
+        args.select_prompts = True
+        args.generate_images = True
+        args.create_human_template = True
     
     if args.generate_full_prompts:
         run([
@@ -96,6 +105,14 @@ def main() -> None:
         if args.dry_run_images:
             cmd.append("--dry-run")
         run(cmd)
+    
+    if args.create_human_template:
+        run([
+            py, "create_human_label_template.py",
+            "--generations", gen_cfg["generations_csv"],
+            "--constraints", prompt_cfg["out_constraints"],
+            "--out", label_cfg["labels_csv"],
+        ])
 
 if __name__ == "__main__":
     main()

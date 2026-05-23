@@ -37,20 +37,6 @@ prompt_subset:
     - cardinality_simple_single_026
     - cardinality_simple_single_030
 
-    # Combined attribute + spatial prompts
-    - combo_attr_spatial_natural_001
-    - combo_attr_spatial_natural_011
-    - combo_attr_spatial_natural_021
-    - combo_attr_spatial_simple_026
-    - combo_attr_spatial_simple_030
-
-    # Combined cardinality + spatial prompts
-    - combo_card_spatial_natural_005
-    - combo_card_spatial_natural_010
-    - combo_card_spatial_natural_015
-    - combo_card_spatial_simple_025
-    - combo_card_spatial_simple_030
-
 generation:
   provider: openai
   model_name: gpt-image-1
@@ -59,3 +45,6 @@ generation:
   samples_per_prompt: 1
   size: 1024x1024
   quality: low
+
+human_labels:
+  labels_csv: ../data/labels/human_labels_checkpoint2.csv
