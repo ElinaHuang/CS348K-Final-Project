@@ -63,6 +63,8 @@ def main() -> None:
     parser.add_argument("--generate-images", action="store_true")
     parser.add_argument("--dry-run-images", action="store_true")
     parser.add_argument("--create-human-template", action="store_true")
+    parser.add_argument("--run-vlm", action="store_true")
+    parser.add_argument("--dry-run-vlm", action="store_true")
     parser.add_argument("--all-pre-label", action="store_true", help="Generate prompt subset, generate images, and create human-label template.")
     args = parser.parse_args()
 
@@ -72,6 +74,7 @@ def main() -> None:
     prompt_cfg = config["prompt_subset"]
     gen_cfg = config["generation"]
     label_cfg = config["human_labels"]
+    vlm_cfg = config["vlm_checker"]
 
     if args.all_pre_label:
         args.generate_full_prompts = True
@@ -113,6 +116,20 @@ def main() -> None:
             "--constraints", prompt_cfg["out_constraints"],
             "--out", label_cfg["labels_csv"],
         ])
+
+    if args.run_vlm:
+        cmd = [
+            py, "run_vlm_checker.py",
+            "--generations", gen_cfg["generations_csv"],
+            "--constraints", prompt_cfg["out_constraints"],
+            "--out", vlm_cfg["labels_csv"],
+            "--model-name", vlm_cfg["model_name"],
+            "--provider", vlm_cfg.get("provider", "stub"),
+        ]
+        if args.dry_run_vlm:
+            cmd.append("--dry-run")
+        run(cmd)
+
 
 if __name__ == "__main__":
     main()

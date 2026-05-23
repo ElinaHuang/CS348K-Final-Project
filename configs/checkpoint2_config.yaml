@@ -48,3 +48,9 @@ generation:
 
 human_labels:
   labels_csv: ../data/labels/human_labels_checkpoint2.csv
+
+vlm_checker:
+  provider: openai
+  model_name: gpt-4.1
+  labels_csv: ../data/labels/vlm_labels_checkpoint2.csv
+  use_structured_output: false
