@@ -67,6 +67,8 @@ def main() -> None:
     parser.add_argument("--dry-run-vlm", action="store_true")
     parser.add_argument("--analyze", action="store_true")
     parser.add_argument("--generate-repairs", action="store_true")
+    parser.add_argument("--generate-repair-images", action="store_true")
+    parser.add_argument("--dry-run-repair-images", action="store_true")
     parser.add_argument("--all-pre-label", action="store_true", help="Generate prompt subset, generate images, and create human-label template.")
     args = parser.parse_args()
 
@@ -145,6 +147,22 @@ def main() -> None:
     
     if args.generate_repairs:
         run([py, "generate_repair_prompts.py", "--config", args.config])
+    
+    if args.generate_repair_images:
+        cmd = [
+            py, "generate_images.py",
+            "--prompts", repair_cfg["repaired_prompts_csv"],
+            "--out", repair_cfg["repaired_generations_csv"],
+            "--image-dir", repair_cfg["repaired_image_dir"],
+            "--model-name", gen_cfg["model_name"],
+            "--samples-per-prompt", "1",
+            "--provider", gen_cfg.get("provider", "stub"),
+            "--size", gen_cfg.get("size", "1024x1024"),
+            "--quality", gen_cfg.get("quality", "low"),
+        ]
+        if args.dry_run_repair_images:
+            cmd.append("--dry-run")
+        run(cmd)
 
 
 if __name__ == "__main__":
