@@ -1,0 +1,6 @@
+metric,value
+num_repair_attempts,3
+num_target_constraints,4
+target_fixed_rate,0.7500
+image_fixed_rate,0.6667
+repair_regression_rate,0.0000
