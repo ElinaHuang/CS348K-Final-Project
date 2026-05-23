@@ -22,7 +22,7 @@ data/checkpoint1/
 
 See [`docs/checkpoint1/checkpoint1_README.md`](docs/checkpoint1/checkpoint1_README.md) for the full checkpoint report.
 
-## Current Status: heckpoint 2
+## Current Status: Checkpoint 2
 
 Checkpoint 2 moves the project from mock data to a small real-data pilot. The current submission includes:
 
@@ -33,7 +33,7 @@ Checkpoint 2 moves the project from mock data to a small real-data pilot. The cu
 - a repair pipeline that converts failed constraints into structured repair prompts
 - a small repair pilot with before/after human labels
 
-See [`docs/checkpoint2/README.md`](docs/checkpoint2/checkpoint2_README.md) for the Checkpoint 2 report.
+See [`docs/checkpoint2/checkpoint2_README.md`](docs/checkpoint2/checkpoint2_README.md) for the Checkpoint 2 report.
 
 ## Evaluation Overview
 
