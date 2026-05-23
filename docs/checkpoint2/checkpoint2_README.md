@@ -36,8 +36,6 @@ The generated image files are stored under:
 data/images/openai_checkpoint2/
 ```
 
-The uploaded archive used for discussion may omit images due to file size, but the repository structure expects generated images in that folder.
-
 ---
 
 ## Scope of the Checkpoint 2 Quantitative Pilot
@@ -46,7 +44,7 @@ For this checkpoint, I define the scope as a small real-data evaluation pilot pl
 
 During preliminary human labeling, I found that the current cardinality and attribute/material constraints produce meaningful pass, fail, and ambiguous cases. In contrast, the current spatial grammar requires further revision. In particular, image-plane vertical relations such as “higher/lower in the image” do not always match natural human interpretations of physical spatial relations. Because the spatial definition is still being revised, I restrict the Checkpoint 2 quantitative results to the subset of prompts whose constraints are already well-defined and fully labeled.
 
-The excluded spatial-heavy combined prompts are kept as generated examples, but they are not included in the current quantitative metrics. In the next iteration, I will revise the spatial grammar to use more physically meaningful relations such as “on top of,” “under,” and “inside,” then rerun generation and repair on the updated prompt set.
+The excluded spatial-heavy combined prompts are kept as generated examples. In the next iteration, I will revise the spatial grammar to use more physically meaningful relations such as “on top of,” “under,” and “inside,” then rerun generation and repair on the updated prompt set.
 
 ---
 
@@ -70,7 +68,20 @@ For pass labels, notes are optional and usually left blank. For fail or ambiguou
 
 ### 1. Prompt generation and real image generation
 
-Checkpoint 2 uses a selected subset of prompts from the active hard grammar.
+Checkpoint 2 uses a selected subset of prompts from the grammar. The current T2I generator is:
+
+```text
+gpt-image-1
+```
+
+The generation settings are:
+
+```text
+provider: OpenAI
+size: 1024x1024
+quality: low
+samples_per_prompt: 1
+```
 
 Important files:
 
