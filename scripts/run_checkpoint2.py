@@ -69,6 +69,7 @@ def main() -> None:
     parser.add_argument("--generate-repairs", action="store_true")
     parser.add_argument("--generate-repair-images", action="store_true")
     parser.add_argument("--dry-run-repair-images", action="store_true")
+    parser.add_argument("--create-repair-label-template", action="store_true")
     parser.add_argument("--all-pre-label", action="store_true", help="Generate prompt subset, generate images, and create human-label template.")
     args = parser.parse_args()
 
@@ -163,6 +164,9 @@ def main() -> None:
         if args.dry_run_repair_images:
             cmd.append("--dry-run")
         run(cmd)
+    
+    if args.create_repair_label_template:
+        run([py, "create_repair_label_template.py", "--config", args.config])
 
 
 if __name__ == "__main__":
