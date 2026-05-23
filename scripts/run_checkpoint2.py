@@ -65,6 +65,7 @@ def main() -> None:
     parser.add_argument("--create-human-template", action="store_true")
     parser.add_argument("--run-vlm", action="store_true")
     parser.add_argument("--dry-run-vlm", action="store_true")
+    parser.add_argument("--analyze", action="store_true")
     parser.add_argument("--all-pre-label", action="store_true", help="Generate prompt subset, generate images, and create human-label template.")
     args = parser.parse_args()
 
@@ -75,6 +76,7 @@ def main() -> None:
     gen_cfg = config["generation"]
     label_cfg = config["human_labels"]
     vlm_cfg = config["vlm_checker"]
+    analysis_cfg = config["analysis"]
 
     if args.all_pre_label:
         args.generate_full_prompts = True
@@ -129,6 +131,15 @@ def main() -> None:
         if args.dry_run_vlm:
             cmd.append("--dry-run")
         run(cmd)
+    
+    if args.analyze:
+        run([
+            py, "analyze_checker.py",
+            "--human", label_cfg["labels_csv"],
+            "--vlm", vlm_cfg["labels_csv"],
+            "--prompts", prompt_cfg["out_prompts"],
+            "--out-dir", analysis_cfg["out_dir"],
+        ])
 
 
 if __name__ == "__main__":

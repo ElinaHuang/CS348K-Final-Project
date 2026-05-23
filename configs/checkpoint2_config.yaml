@@ -54,3 +54,6 @@ vlm_checker:
   model_name: gpt-4.1
   labels_csv: ../data/labels/vlm_labels_checkpoint2.csv
   use_structured_output: false
+
+analysis:
+  out_dir: ../results/checkpoint2
