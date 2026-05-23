@@ -1,0 +1,56 @@
+repair_id,prompt_id,prompt,source_image_id,source_prompt_id,repair_strategy,trigger_label_source,trigger_labels,num_target_constraints,target_constraint_ids,original_prompt,repaired_prompt
+repair_001_repair_all_failed_attribute_natural_single_006_gpt-image-1_0,repair_001_repair_all_failed_attribute_natural_single_006_gpt-image-1_0,"Create a clear image satisfying all of the following visual requirements:
+1. The sewing needle should be clearly visible.
+2. The transparent button must be clearly visible as a distinct object in the image. Do not omit it.
+3. The sewing needle should be matte black.
+4. The transparent button should be glossy white.
+
+Composition guidelines:
+- Use a clear, front-facing composition.
+- Keep all relevant objects visible and separated.
+- Avoid occlusion, heavy overlap, cropped objects, or ambiguous object shapes.
+- Do not introduce extra objects that could be confused with the requested objects.",attribute_natural_single_006_gpt-image-1_0,attribute_natural_single_006,repair_all_failed,human,fail,1,attribute_natural_single_006_exist_object_2,A realistic image of a matte black sewing needle next to a glossy white transparent button on a craft table with beads and art supplies.,"Create a clear image satisfying all of the following visual requirements:
+1. The sewing needle should be clearly visible.
+2. The transparent button must be clearly visible as a distinct object in the image. Do not omit it.
+3. The sewing needle should be matte black.
+4. The transparent button should be glossy white.
+
+Composition guidelines:
+- Use a clear, front-facing composition.
+- Keep all relevant objects visible and separated.
+- Avoid occlusion, heavy overlap, cropped objects, or ambiguous object shapes.
+- Do not introduce extra objects that could be confused with the requested objects."
+repair_002_repair_all_failed_cardinality_natural_single_011_gpt-image-1_0,repair_002_repair_all_failed_cardinality_natural_single_011_gpt-image-1_0,"Create a clear image satisfying all of the following visual requirements:
+1. The tiny coin should be clearly visible.
+2. There must be exactly 7 clearly visible tiny coin(s) total. Do not include extra tiny coin(s), and do not hide or merge any of them.
+
+Composition guidelines:
+- Use a clear, front-facing composition.
+- Keep all relevant objects visible and separated.
+- Avoid occlusion, heavy overlap, cropped objects, or ambiguous object shapes.
+- Do not introduce extra objects that could be confused with the requested objects.",cardinality_natural_single_011_gpt-image-1_0,cardinality_natural_single_011,repair_all_failed,human,fail,1,cardinality_natural_single_011_cardinality,A realistic image of exactly 7 small tiny coins on a dining table with plates and utensils nearby.,"Create a clear image satisfying all of the following visual requirements:
+1. The tiny coin should be clearly visible.
+2. There must be exactly 7 clearly visible tiny coin(s) total. Do not include extra tiny coin(s), and do not hide or merge any of them.
+
+Composition guidelines:
+- Use a clear, front-facing composition.
+- Keep all relevant objects visible and separated.
+- Avoid occlusion, heavy overlap, cropped objects, or ambiguous object shapes.
+- Do not introduce extra objects that could be confused with the requested objects."
+repair_003_repair_all_failed_cardinality_natural_single_021_gpt-image-1_0,repair_003_repair_all_failed_cardinality_natural_single_021_gpt-image-1_0,"Create a clear image satisfying all of the following visual requirements:
+1. The rubber band must be clearly visible as a distinct object in the image. Do not omit it.
+2. There must be exactly 7 clearly visible rubber band(s) total. Do not include extra rubber band(s), and do not hide or merge any of them.
+
+Composition guidelines:
+- Use a clear, front-facing composition.
+- Keep all relevant objects visible and separated.
+- Avoid occlusion, heavy overlap, cropped objects, or ambiguous object shapes.
+- Do not introduce extra objects that could be confused with the requested objects.",cardinality_natural_single_021_gpt-image-1_0,cardinality_natural_single_021,repair_all_failed,human,fail,2,cardinality_natural_single_021_exist_target;cardinality_natural_single_021_cardinality,A realistic image of exactly 7 small rubber bands on a workbench with tools.,"Create a clear image satisfying all of the following visual requirements:
+1. The rubber band must be clearly visible as a distinct object in the image. Do not omit it.
+2. There must be exactly 7 clearly visible rubber band(s) total. Do not include extra rubber band(s), and do not hide or merge any of them.
+
+Composition guidelines:
+- Use a clear, front-facing composition.
+- Keep all relevant objects visible and separated.
+- Avoid occlusion, heavy overlap, cropped objects, or ambiguous object shapes.
+- Do not introduce extra objects that could be confused with the requested objects."

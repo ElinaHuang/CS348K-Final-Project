@@ -66,6 +66,7 @@ def main() -> None:
     parser.add_argument("--run-vlm", action="store_true")
     parser.add_argument("--dry-run-vlm", action="store_true")
     parser.add_argument("--analyze", action="store_true")
+    parser.add_argument("--generate-repairs", action="store_true")
     parser.add_argument("--all-pre-label", action="store_true", help="Generate prompt subset, generate images, and create human-label template.")
     args = parser.parse_args()
 
@@ -77,6 +78,7 @@ def main() -> None:
     label_cfg = config["human_labels"]
     vlm_cfg = config["vlm_checker"]
     analysis_cfg = config["analysis"]
+    repair_cfg = config["repair"]
 
     if args.all_pre_label:
         args.generate_full_prompts = True
@@ -140,6 +142,9 @@ def main() -> None:
             "--prompts", prompt_cfg["out_prompts"],
             "--out-dir", analysis_cfg["out_dir"],
         ])
+    
+    if args.generate_repairs:
+        run([py, "generate_repair_prompts.py", "--config", args.config])
 
 
 if __name__ == "__main__":

@@ -57,3 +57,27 @@ vlm_checker:
 
 analysis:
   out_dir: ../results/checkpoint2
+
+repair:
+  # Code supports both repair_all_failed and repair_single_target.
+  # Checkpoint 2 default: repair all failed constraints in each failed image.
+  strategies:
+    - repair_all_failed
+    # - repair_single_target
+  trigger_label_source: human
+  trigger_labels:
+    - fail
+  max_repairs: 10
+
+  repaired_prompts_csv: ../data/repaired/repaired_prompts_checkpoint2.csv
+  repair_targets_csv: ../data/repaired/repair_targets_checkpoint2.csv
+
+  repaired_image_dir: ../data/repaired/images_checkpoint2
+  repaired_generations_csv: ../data/repaired/repaired_generations_checkpoint2.csv
+  repaired_human_labels_csv: ../data/repaired/repaired_human_labels_checkpoint2.csv
+  repaired_vlm_labels_csv: ../data/repaired/repaired_vlm_labels_checkpoint2.csv
+
+  repair_target_results_csv: ../results/checkpoint2/repair_target_results.csv
+  repair_image_results_csv: ../results/checkpoint2/repair_image_results.csv
+  repair_success_by_type_csv: ../results/checkpoint2/repair_success_by_constraint_type.csv
+  repair_summary_metrics_csv: ../results/checkpoint2/repair_summary_metrics.csv
