@@ -10,11 +10,30 @@
 
 This project builds a grammar-driven diagnose-and-repair pipeline for prompt adherence in text-to-image generation, focusing on structured visual constraints such as object cardinality, attribute binding, and spatial layout. The core system will synthesize controlled prompts across simple and natural scene contexts, including both single-constraint and combined-constraint prompts, then evaluate generated images using human labels and a VLM-based constraint checker. By the end of the project, I will report constraint-level failure rates, VLM-human agreement, and a small-scale before/after analysis of whether constraint-aware prompt rewrites repair failed requirements without introducing regressions.
 
-## Current Status: Checkpoint 1
+## Checkpoint 1
 
 Checkpoint 1 focuses on concretizing the evaluation pipeline. The current version includes grammar-based prompt/constraint generation, mock image generations, human/VLM label schemas, constraint-level checker metrics, image-level checker metrics, and image-level controllability metrics.
 
+The Checkpoint 1 data is archived under:
+
+```text
+data/checkpoint1/
+```
+
 See [`docs/checkpoint1/checkpoint1_README.md`](docs/checkpoint1/checkpoint1_README.md) for the full checkpoint report.
+
+## Current Status: heckpoint 2
+
+Checkpoint 2 moves the project from mock data to a small real-data pilot. The current submission includes:
+
+- real T2I generations using the OpenAI image API
+- human labels on a selected subset of generated images
+- VLM checker outputs on the same labeled subset
+- constraint-level and image-level evaluation results
+- a repair pipeline that converts failed constraints into structured repair prompts
+- a small repair pilot with before/after human labels
+
+See [`docs/checkpoint2/README.md`](docs/checkpoint2/checkpoint2_README.md) for the Checkpoint 2 report.
 
 ## Evaluation Overview
 
@@ -55,11 +74,23 @@ This is the main project-level evaluation. It measures how well the T2I generato
 
 The main metrics are human-labeled image-level pass, fail, and ambiguous rates.
 
+For Checkpoint 2, the quantitative pilot is intentionally small, so these numbers are treated as preliminary rather than final conclusions.
+
+### 4. Repair evaluation
+
+Repair is triggered by failed atomic constraints, but organized as image-level prompt reconstruction. The repair analysis measures:
+
+- `target-constraint fixed rate`
+- `image-level fixed rate`
+- `regression rate`
+- `repair success by constraint type`
+
 ## Project Documents
 
 - [Project proposal](docs/proposal/proposal.md)
 - [Grammar design](docs/grammar.md)
 - [Checkpoint 1 report](docs/checkpoint1/checkpoint1_README.md)
+- [Checkpoint 2 report](docs/checkpoint2/checkpoint2_README.md)
 
 ## Repository Structure
 
@@ -72,7 +103,50 @@ results/        generated evaluation results
 tests/          unit tests
 ```
 
+## Data Organization
+
+Checkpoint 1 mock/easy data is archived in:
+
+```text
+data/checkpoint1/
+```
+
+The current active project data uses the default data folders:
+
+```text
+data/prompts/
+data/generations/
+data/images/
+data/labels/
+data/repaired/
+```
+
+Checkpoint 2 selected prompt subsets and labels use checkpoint-specific filenames, for example:
+
+```text
+data/prompts/prompts_checkpoint2.csv
+data/prompts/constraints_checkpoint2.csv
+data/generations/generations_checkpoint2.csv
+data/labels/human_labels_checkpoint2.csv
+data/labels/vlm_labels_checkpoint2.csv
+```
+
+Generated image files are stored under:
+
+```text
+data/images/openai_checkpoint2/
+```
+
+Results are organized by checkpoint:
+
+```text
+results/checkpoint1/
+results/checkpoint2/
+```
+
 ## How to Run
+
+### Checkpoint 1
 
 From the repository root, run:
 
@@ -80,10 +154,34 @@ From the repository root, run:
 python scripts/run_checkpoint1.py
 ```
 
-This runs the current checkpoint pipeline and writes outputs to:
+The main outputs are written to:
 
 ```text
 results/checkpoint1/
+```
+
+### Checkpoint 2
+
+Checkpoint 2 uses staged commands because some steps require API calls or manual human labeling.
+
+From the `scripts/` directory:
+
+```bash
+python run_checkpoint2.py --select-prompts
+python run_checkpoint2.py --generate-images
+python run_checkpoint2.py --create-human-template
+python run_checkpoint2.py --run-vlm
+python run_checkpoint2.py --analyze
+python run_checkpoint2.py --generate-repairs
+python run_checkpoint2.py --generate-repair-images
+python run_checkpoint2.py --create-repair-label-template
+python run_checkpoint2.py --analyze-repair
+```
+
+The main outputs are written to:
+
+```text
+results/checkpoint2/
 ```
 
 ## Tests
@@ -94,22 +192,8 @@ From the repository, run:
 pytest tests
 ```
 
-All tests currently pass.
+The tests cover prompt generation, VLM response parsing, evaluation metrics, and repair logic.
 
-## Mock Data Notice
+## Notes
 
-The current Checkpoint 1 data is a mock baseline:
-
-- images in `data/images/mock_model/` and relative metadata in `/data/generations/generations.csv` are not real T2I outputs
-- `data/labels/human_labels.csv` is not manually labeled final data
-- `data/labels/vlm_labels.csv` is not real VLM API output
-
-These files are included only to test the checkpoint evaluation pipeline. The next step is to replace them with real T2I-generated images and real VLM checker outputs.
-
-### Scope of the Checkpoint 2 Quantitative Pilot
-
-For this checkpoint, I define the scope as a small real-data evaluation pilot plus repair-pipeline integration. The quantitative results focus on the subset of generated images that have completed human labels and whose constraints are currently well-defined. In parallel, the repair module is integrated at the pipeline level: failed atomic constraints can be converted into structured repair prompts and repair target records, but the full before/after repair experiment is left for the next iteration after revising the spatial grammar.
-
-During preliminary human labeling, I found that the current cardinality and attribute/material constraints produce meaningful pass, fail, and ambiguous cases. In contrast, the current spatial grammar requires further revision. In particular, image-plane vertical relations such as “higher/lower in the image” do not always match natural human interpretations of physical spatial relations. Because the spatial definition is still being revised, I restrict the Checkpoint 2 quantitative results to the subset of prompts whose constraints are already well-defined and fully labeled.
-
-The excluded spatial-heavy combined prompts are kept as generated examples, but they are not included in the current quantitative metrics. In the next iteration, I will revise the spatial grammar to use more physically meaningful relations such as “on top of,” “under,” and “inside,” then rerun generation and repair on the updated prompt set.
+The current Checkpoint 2 results are a small real-data pilot rather than the final experiment. Human labeling revealed that cardinality and attribute/material constraints already produce meaningful pass/fail/ambiguous cases, while the current spatial grammar still needs revision. In the next iteration, the spatial grammar will be updated to use more physically meaningful relations before rerunning the broader generation and repair experiment.
