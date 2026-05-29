@@ -1,0 +1,56 @@
+# Final experiment configuration.
+# Paths are written relative to /script directory.
+
+experiment:
+  name: final
+
+grammar:
+  config: ../configs/grammar_config.yaml
+
+prompt_subset:
+  out_prompts: ../data/prompts/prompts.csv
+  out_constraints: ../data/prompts/constraints.csv
+  generation_plan: ../data/generations/generation_plan.csv
+
+generation:
+  generations_csv: ../data/generations/generations.csv
+  samples_per_prompt: 1
+
+human_labels:
+  labels_csv: ../data/labels/human_labels.csv
+
+vlm_checker:
+  provider: openai
+  model_name: gpt-4.1
+  labels_csv: ../data/labels/vlm_labels.csv
+
+analysis: # results for image generation evaluations
+  out_dir: ../results/final
+
+repair:
+  strategies: [repair_all_failed]
+  trigger_labels: [fail, ambiguous]
+  # Repair all non-pass images for each trigger source.
+
+  repaired_prompts_human_csv: ../data/repaired/human_triggered/repaired_prompts.csv
+  repair_targets_human_csv: ../data/repaired/human_triggered/repair_targets.csv
+  repaired_prompts_vlm_csv: ../data/repaired/vlm_triggered/repaired_prompts.csv
+  repair_targets_vlm_csv: ../data/repaired/vlm_triggered/repair_targets.csv
+
+  repaired_human_image_dir: ../data/repaired/human_triggered/images
+  repaired_human_generations_csv: ../data/repaired/human_triggered/repaired_generations.csv
+  repaired_human_labels_csv: ../data/repaired/human_triggered/repaired_human_labels.csv
+
+  repaired_vlm_image_dir: ../data/repaired/vlm_triggered/images
+  repaired_vlm_generations_csv: ../data/repaired/vlm_triggered/repaired_generations.csv
+  repaired_vlm_labels_csv: ../data/repaired/vlm_triggered/repaired_human_labels.csv
+
+  repair_human_target_results_csv: ../results/final/repair_human_target_results.csv
+  repair_human_image_results_csv: ../results/final/repair_human_image_results.csv
+  repair_human_success_by_type_csv: ../results/final/repair_human_success_by_constraint_type.csv
+  repair_human_summary_metrics_csv: ../results/final/repair_human_summary_metrics.csv
+
+  repair_vlm_target_results_csv: ../results/final/repair_vlm_target_results.csv
+  repair_vlm_image_results_csv: ../results/final/repair_vlm_image_results.csv
+  repair_vlm_success_by_type_csv: ../results/final/repair_vlm_success_by_constraint_type.csv
+  repair_vlm_summary_metrics_csv: ../results/final/repair_vlm_summary_metrics.csv

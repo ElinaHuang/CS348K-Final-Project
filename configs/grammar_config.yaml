@@ -1,0 +1,135 @@
+# Final grammar configuration for CS348K final project.
+
+random_seed: 348
+
+object_groups:
+  small_items:
+    - paper clip
+    - button
+    - coin
+    - die
+    - marble
+    - safety pin
+    - thumbtack
+    - flat washer
+    - bottle cap
+    - rubber band
+  containers:
+    - small box
+    - serving bowl
+    - cup
+    - food container
+    - tray
+  surfaces:
+    - notebook
+    - sheet of paper
+    - napkin
+    - index card
+    - plate
+    - cutting board
+
+# Attributes are grouped by visual property type. Plain single-color attributes
+# are intentionally excluded because pilot runs made them too easy; color is
+# instead combined with texture/pattern attributes such as "blue-and-white striped".
+attribute_groups:
+  pattern_texture:
+    allowed_object_groups: [surfaces, containers]
+    attributes:
+      - blue-and-white striped
+      - red-and-white striped
+      - black-and-white checkered
+      - yellow-and-green polka-dotted
+      - white speckled
+      - multicolored
+  material_finish:
+    allowed_object_groups: [small_items, containers]
+    attributes:
+      - reflective metallic
+      - transparent glass
+      - glossy white
+      - matte black
+      - plastic
+      - ceramic
+
+numbers: [3, 4, 5, 6]
+
+relations:
+  left_of:
+    text: to the left of
+    category: lateral
+    object_1_groups: [small_items, containers, surfaces]
+    object_2_groups: [small_items, containers, surfaces]
+  right_of:
+    text: to the right of
+    category: lateral
+    object_1_groups: [small_items, containers, surfaces]
+    object_2_groups: [small_items, containers, surfaces]
+  on_top_of:
+    text: on top of
+    category: support
+    object_1_groups: [small_items]
+    object_2_groups: [containers, surfaces]
+  under:
+    text: under
+    category: support
+    object_1_groups: [surfaces]
+    object_2_groups: [small_items]
+  inside:
+    text: inside
+    category: containment
+    object_1_groups: [small_items]
+    object_2_groups: [containers]
+  outside:
+    text: outside
+    category: containment
+    object_1_groups: [small_items]
+    object_2_groups: [containers]
+
+scene_contexts:
+  simple:
+    prefix: A clear image of
+    contexts:
+      - on a lightly cluttered tabletop
+      - on a plain desk with soft shadows
+      - on a clean surface with a few unrelated objects
+  natural:
+    prefix: A realistic image of
+    contexts:
+      - on a cluttered desk with many office supplies
+      - on a crowded kitchen counter with utensils nearby
+      - on a picnic blanket with many small objects
+      - on a shelf full of books and decorations
+      - on a workbench with tools
+      - on a craft table with beads and art supplies
+
+# Final unpaired prompt set. Each prompt is assigned to exactly one T2I model
+# using stratified assignment balanced by prompt family.
+dataset:
+  prompt_counts:
+    single_spatial: 24
+    single_attribute: 24
+    single_cardinality: 24
+    combined_spatial_attribute: 36
+    combined_spatial_cardinality: 36
+    combined_attribute_cardinality: 36
+  t2i_models:
+    - provider: openai
+      model_name: gpt-image-1
+      image_dir: ../data/images/openai_gpt_image_1
+      size: 1024x1024
+      quality: low
+    - provider: google
+      model_name: gemini-2.5-flash-image
+      image_dir: ../data/images/google_gemini_25_flash_image
+      aspect_ratio: '1:1'
+  assignment_type: unpaired_stratified
+
+templates:
+  single_spatial: "{prefix} a {object_1} {relation_text} a {object_2} {scene_context}."
+  single_attribute: "{prefix} a {attribute_1} {object_1} and a {attribute_2} {object_2} {scene_context}."
+  single_cardinality: "{prefix} exactly {number} {object_1_plural} {scene_context}."
+  combined_spatial_attribute: "{prefix} a {attribute_1} {object_1} {relation_text} a {attribute_2} {object_2} {scene_context}."
+  combined_spatial_cardinality: "{prefix} exactly {number} {object_1_plural} {relation_text} a {object_2} {scene_context}."
+  combined_attribute_cardinality: "{prefix} exactly {number} {attribute_1} {object_1_plural} and one {attribute_2} {object_2} {scene_context}."
+
+label_values: [pass, fail, ambiguous]
