@@ -72,3 +72,12 @@ def pluralize(obj: str) -> str:
     if obj.endswith("s"):
         return obj
     return obj + "s"
+
+
+def load_environment() -> None:
+    try:
+        from dotenv import load_dotenv
+    except ImportError:
+        return
+    load_dotenv()
+    
