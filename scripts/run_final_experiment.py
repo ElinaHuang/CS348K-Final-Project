@@ -22,7 +22,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="../configs/final_experiment_config.yaml")
     parser.add_argument("--stage", required=True, choices=[
-        "generate-prompts", "generate-images", "create-human-template"
+        "generate-prompts", "generate-images", "create-human-template", "run-vlm"
     ])
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
@@ -37,6 +37,10 @@ def main():
         run(cmd)
     elif args.stage == "create-human-template":
         run([py, "create_human_label_template.py", "--generations", cfg["generation"]["generations_csv"], "--constraints", cfg["prompt_subset"]["out_constraints"], "--out", cfg["human_labels"]["labels_csv"]])
+    elif args.stage == "run-vlm":
+        cmd = [py, "run_vlm_checker.py", "--generations", cfg["generation"]["generations_csv"], "--constraints", cfg["prompt_subset"]["out_constraints"], "--out", cfg["vlm_checker"]["labels_csv"], "--provider", cfg["vlm_checker"]["provider"], "--model-name", cfg["vlm_checker"]["model_name"]]
+        if args.dry_run: cmd.append("--dry-run")
+        run(cmd)
 
 
 if __name__ == "__main__":
