@@ -4,16 +4,16 @@ random_seed: 348
 
 object_groups:
   small_items:
-    - paper clip
-    - button
+    - small paper clip
+    - standard sewing button
     - coin
     - die
     - marble
-    - safety pin
+    - standard safety pin
     - thumbtack
-    - flat washer
+    - small flat washer
     - bottle cap
-    - rubber band
+    - thin rubber band
   containers:
     - small box
     - serving bowl
