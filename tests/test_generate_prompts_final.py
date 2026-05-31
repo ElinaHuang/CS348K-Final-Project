@@ -12,8 +12,7 @@ from generate_prompts import (
 EXPECTED_CONSTRAINT_TYPES = {
     "object_identity",
     "cardinality",
-    "attribute_presence",
-    "attribute_binding",
+    "attribute",
     "spatial_relation",
 }
 
@@ -62,16 +61,12 @@ def test_attribute_groups_are_used_and_compatible_with_object_groups(final_confi
     group_names = set(attribute_groups.keys())
     plain_colors = {"red", "blue", "green", "yellow", "black", "white"}
 
-    presence = [c for c in constraints if c["constraint_type"] == "attribute_presence"]
-    binding = [c for c in constraints if c["constraint_type"] == "attribute_binding"]
-    assert presence
-    assert binding
+    attribute_constraints = [c for c in constraints if c["constraint_type"] == "attribute"]
+    assert attribute_constraints
 
-    for c in presence + binding:
+    for c in attribute_constraints:
         assert c["attribute_category"] in group_names
         assert c["attribute"].lower() not in plain_colors
-
-    for c in binding:
         allowed_groups = attribute_groups[c["attribute_category"]]["allowed_object_groups"]
         assert c["target_object_group"] in allowed_groups
 
