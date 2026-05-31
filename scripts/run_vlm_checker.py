@@ -3,6 +3,8 @@ from __future__ import annotations
 import argparse
 import base64
 import json
+import re
+import time
 from pathlib import Path
 from typing import Dict, List
 
@@ -57,47 +59,6 @@ def build_checker_prompt(constraint: Dict[str, str]) -> str:
     return "\n".join(rules)
 
 
-# def build_checker_prompt(constraint: Dict[str, str]) -> str:
-#     check_text = constraint.get("check_text", "").strip()
-#     ctype = constraint.get("constraint_type", "")
-#     rules = [
-#         "You are a visual constraint checker for a text-to-image evaluation pipeline.",
-#         "Your job is to decide whether the image satisfies one specific visual requirement.",
-#         "Use the judgment style of a reasonable human annotator.",
-#         "Judge only the given requirement; do not evaluate overall image quality, aesthetics, or unrelated details.",
-#         "",
-#         f"Visual requirement: {check_text}",
-#         "",
-#         "Labels:",
-#         "- pass: the requirement is reasonably satisfied.",
-#         "- fail: the requirement is clearly violated.",
-#         "- ambiguous: there is not enough visual evidence to confidently decide pass or fail.",
-#         "",
-#         "Dependency-masked pass rule:",
-#         "- Some requirements depend on a target object existing first. For cardinality, attribute, and spatial-relation requirements, if the relevant target object is clearly missing or replaced by a clearly different object, mark this dependent requirement as pass rather than fail or ambiguous. The actionable failure is handled by a separate object_identity requirement.",
-#         "- Use this masking rule only when the prerequisite object is clearly missing or clearly the wrong object. If the object is present but the count, attribute, or relation itself is unclear, use ambiguous.",
-#         "",
-#         "Ambiguous label guidance:",
-#         "- Use ambiguous when the relevant object, count, attribute, or relation is genuinely unclear, not merely imperfect.",
-#         "- Common ambiguous cases include heavy occlusion, cropping, blur, very small objects, strongly overlapping objects, unclear object identity, unclear attribute visibility, or a spatial relation that cannot be determined from the image.",
-#         "- Do not use ambiguous just because the image is stylized, slightly messy, or has minor artifacts.",
-#         "",
-#         "Calibration rules:",
-#         "- If a reasonable human annotator can still make a clear judgment, choose pass or fail rather than ambiguous.",
-#         "- Minor artifacts or clutter are acceptable if the requirement is still clearly satisfied.",
-#     ]
-#     if ctype == "object_identity":
-#         rules += ["- For object_identity, check only whether the requested object category is recognizable."]
-#     elif ctype == "cardinality":
-#         rules += ["- For cardinality, check whether the requested number of target objects is visible and countable, unless the target object itself is clearly missing or wrong, in which case use the dependency-masked pass rule."]
-#     elif ctype == "attribute":
-#         rules += ["- For attribute, check the full object-attribute requirement, such as whether the image shows a blue-and-white striped notebook, unless the target object itself is clearly missing or wrong, in which case use the dependency-masked pass rule."]
-#     elif ctype == "spatial_relation":
-#         rules += ["- For spatial_relation, check the complete relation in the requirement, such as whether the apple is to the left of the banana. If the required object is missing or clearly wrong, use the dependency-masked pass rule."]
-#     rules += ["", 'Return ONLY valid JSON: {"label": "pass" | "fail" | "ambiguous", "reason": "one short sentence"}']
-#     return "\n".join(rules)
-
-
 def encode_image_as_data_url(image_path: str) -> str:
     path = Path(image_path)
     suffix = path.suffix.lower().replace(".", "") or "png"
@@ -130,7 +91,23 @@ def call_vlm_checker(image_path: str, checker_prompt: str, model_name: str, prov
     raise NotImplementedError(f"Unsupported VLM provider: {provider}")
 
 
-def run_checker(generations: List[Dict[str, str]], constraints: List[Dict[str, str]], model_name: str, provider: str = "openai", dry_run: bool = False) -> List[Dict[str, str]]:
+def retry_wait_seconds_from_error(error: Exception, fallback: float) -> float:
+    message = str(error)
+
+    # Example: "Please try again in 114ms."
+    match_ms = re.search(r"try again in ([0-9]+)ms", message)
+    if match_ms:
+        return max(float(match_ms.group(1)) / 1000.0 + 0.2, fallback)
+
+    # Example: "Please try again in 2s."
+    match_s = re.search(r"try again in ([0-9.]+)s", message)
+    if match_s:
+        return max(float(match_s.group(1)) + 0.2, fallback)
+
+    return fallback
+
+
+def run_checker(generations: List[Dict[str, str]], constraints: List[Dict[str, str]], model_name: str, provider: str = "openai", dry_run: bool = False, max_retries: int = 5) -> List[Dict[str, str]]:
     by_prompt: Dict[str, List[Dict[str, str]]] = {}
     for c in constraints:
         by_prompt.setdefault(c["prompt_id"], []).append(c)
@@ -140,13 +117,73 @@ def run_checker(generations: List[Dict[str, str]], constraints: List[Dict[str, s
             continue
         for c in by_prompt.get(g["prompt_id"], []):
             prompt = build_checker_prompt(c)
-            raw = json.dumps({"label": "ambiguous", "reason": "Dry run placeholder."}) if dry_run else call_vlm_checker(g["image_path"], prompt, model_name, provider)
+            raw = None
+            if dry_run:
+                raw = json.dumps({"label": "ambiguous", "reason": "Dry run placeholder."})
+            else:
+                last_error = None
+                for attempt in range(max_retries):
+                    try:
+                        raw = call_vlm_checker(g["image_path"], prompt, model_name, provider)
+                        break
+                    except Exception as e:
+                        last_error = e
+                        message = str(e)
+
+                        # Retry rate limits and transient API/network errors.
+                        retryable = (
+                            "rate_limit" in message.lower()
+                            or "rate limit" in message.lower()
+                            or "429" in message
+                            or "timeout" in message.lower()
+                            or "temporarily" in message.lower()
+                            or "server" in message.lower()
+                            or "disconnect" in message.lower()
+                            or "connection" in message.lower()
+                        )
+                        if not retryable or attempt == max_retries - 1:
+                            raise
+
+                        fallback = min(0.5 * (2 ** attempt), 20.0)
+                        wait = retry_wait_seconds_from_error(e, fallback)
+                        print(
+                            f"VLM checker request failed for image_id={g.get('image_id', '')}, "
+                            f"constraint_id={c.get('constraint_id', '')}. "
+                            f"Attempt {attempt + 1}/{max_retries}. "
+                            f"Waiting {wait:.2f}s before retrying. Error: {e}"
+                        )
+                        time.sleep(wait)
+                if raw is None:
+                    raise RuntimeError(
+                        f"VLM checker failed after {max_retries} retries. "
+                        f"Last error: {last_error}"
+                    )
+            
             label, reason, status = parse_vlm_response(raw)
             rows.append({
                 "image_id": g["image_id"], "prompt_id": g["prompt_id"], "provider": g.get("provider", ""), "model_name": g.get("model_name", ""),
                 "constraint_id": c["constraint_id"], "constraint_type": c["constraint_type"], "vlm_label": label, "vlm_reason": reason, "parse_status": status, "raw_response": raw,
             })
     return rows
+
+
+# def run_checker(generations: List[Dict[str, str]], constraints: List[Dict[str, str]], model_name: str, provider: str = "openai", dry_run: bool = False) -> List[Dict[str, str]]:
+#     by_prompt: Dict[str, List[Dict[str, str]]] = {}
+#     for c in constraints:
+#         by_prompt.setdefault(c["prompt_id"], []).append(c)
+#     rows = []
+#     for g in generations:
+#         if g.get("generation_status", "success") not in ("success", "", None):
+#             continue
+#         for c in by_prompt.get(g["prompt_id"], []):
+#             prompt = build_checker_prompt(c)
+#             raw = json.dumps({"label": "ambiguous", "reason": "Dry run placeholder."}) if dry_run else call_vlm_checker(g["image_path"], prompt, model_name, provider)
+#             label, reason, status = parse_vlm_response(raw)
+#             rows.append({
+#                 "image_id": g["image_id"], "prompt_id": g["prompt_id"], "provider": g.get("provider", ""), "model_name": g.get("model_name", ""),
+#                 "constraint_id": c["constraint_id"], "constraint_type": c["constraint_type"], "vlm_label": label, "vlm_reason": reason, "parse_status": status, "raw_response": raw,
+#             })
+#     return rows
 
 
 def main() -> None:
