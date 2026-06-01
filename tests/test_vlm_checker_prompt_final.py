@@ -37,13 +37,8 @@ def test_build_checker_prompt_for_one_constraint():
     assert 'Return "fail" if the constraint is clearly violated.' in prompt
     assert 'Return "ambiguous" if the image does not provide enough visual evidence to confidently decide pass or fail.' in prompt
 
-    assert "Dependency-masked pass rule:" in prompt
-    assert "mark this dependent visual constraint as pass rather than fail or ambiguous" in prompt
-    assert "Use this rule only when the target object is clearly missing or wrong." in prompt
-    assert "If the target object is present but the count, attribute, or relation is unclear, return ambiguous." in prompt
-
     assert "Ambiguous label guidance:" in prompt
-    assert "Use ambiguous when the relevant object, count, attribute, or relation is genuinely unclear" in prompt
+    assert "Use ambiguous when the relevant object, count, attribute, or spatial relation is visually unclear, or when the target object's" in prompt
     assert "If a reasonable human annotator can still make a clear judgment, choose pass or fail rather than ambiguous." in prompt
     assert "Common ambiguous cases include heavy occlusion" in prompt
 
@@ -64,7 +59,7 @@ def test_build_checker_prompt_for_attribute_constraint():
 
     assert "Constraint type: attribute" in prompt
     assert "Constraint: Does the image show a blue-and-white striped notebook?" in prompt
-    assert "Dependency-masked pass rule:" in prompt
+    assert "Ambiguous label guidance:" in prompt
     assert "Return ONLY valid JSON" in prompt
 
 

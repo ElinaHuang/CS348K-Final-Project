@@ -44,14 +44,10 @@ def build_checker_prompt(constraint: Dict[str, str]) -> str:
         '- Return "fail" if the constraint is clearly violated.',
         '- Return "ambiguous" if the image does not provide enough visual evidence to confidently decide pass or fail.',
         "",
-        "Dependency-masked pass rule:",
-        "- Some requirements depend on a target object existing first. For cardinality, attribute, and spatial-relation requirements, if the relevant target object is clearly missing or replaced by a clearly different object, mark this dependent visual constraint as pass rather than fail or ambiguous.",
-        "- Use this rule only when the target object is clearly missing or wrong. If the target object is present but the count, attribute, or relation is unclear, return ambiguous.",
-        "",
         "Ambiguous label guidance:",
-        "- Use ambiguous when the relevant object, count, attribute, or relation is genuinely unclear, not merely imperfect.",
+        "- Use ambiguous when the relevant object, count, attribute, or spatial relation is visually unclear, or when the target object's identity or required property cannot be confidently determined.",
         "- If a reasonable human annotator can still make a clear judgment, choose pass or fail rather than ambiguous.",
-        "- Common ambiguous cases include heavy occlusion, cropping, blur, very small objects, strongly overlapping objects, unclear object identity, unclear attribute visibility, or a spatial relation that cannot be determined from the image.",
+        "- Common ambiguous cases include heavy occlusion, cropping, blur, very small objects, strongly overlapping objects, or object-like shapes that cannot be confidently identified as the requested object.",
         "",
         'Return ONLY valid JSON: {"label": "pass" | "fail" | "ambiguous", "reason": "one short sentence"}',
     ]
@@ -165,25 +161,6 @@ def run_checker(generations: List[Dict[str, str]], constraints: List[Dict[str, s
                 "constraint_id": c["constraint_id"], "constraint_type": c["constraint_type"], "vlm_label": label, "vlm_reason": reason, "parse_status": status, "raw_response": raw,
             })
     return rows
-
-
-# def run_checker(generations: List[Dict[str, str]], constraints: List[Dict[str, str]], model_name: str, provider: str = "openai", dry_run: bool = False) -> List[Dict[str, str]]:
-#     by_prompt: Dict[str, List[Dict[str, str]]] = {}
-#     for c in constraints:
-#         by_prompt.setdefault(c["prompt_id"], []).append(c)
-#     rows = []
-#     for g in generations:
-#         if g.get("generation_status", "success") not in ("success", "", None):
-#             continue
-#         for c in by_prompt.get(g["prompt_id"], []):
-#             prompt = build_checker_prompt(c)
-#             raw = json.dumps({"label": "ambiguous", "reason": "Dry run placeholder."}) if dry_run else call_vlm_checker(g["image_path"], prompt, model_name, provider)
-#             label, reason, status = parse_vlm_response(raw)
-#             rows.append({
-#                 "image_id": g["image_id"], "prompt_id": g["prompt_id"], "provider": g.get("provider", ""), "model_name": g.get("model_name", ""),
-#                 "constraint_id": c["constraint_id"], "constraint_type": c["constraint_type"], "vlm_label": label, "vlm_reason": reason, "parse_status": status, "raw_response": raw,
-#             })
-#     return rows
 
 
 def main() -> None:
