@@ -1,0 +1,346 @@
+image_id,generation_job_id,prompt_id,provider,model_name,sample_id,image_path,generation_status,prompt,timestamp,error_message
+repair_job_human_0001_gpt_image_1_00,repair_job_human_0001,repair_human_001_job_0001_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0001_gpt_image_1_00.png,success,"A realistic image of exactly 3 ceramic bottle caps and one plastic marble on a craft table with beads and art supplies.
+
+Important generation instructions:
+- Make it clear and easy to judge that the object generated is clearly recognizable as bottle cap, not a vague or ambiguous object-like shape.
+- Make sure that there are exactly 3 bottle caps; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0002_gemini_2_5_flash_image_00,repair_job_human_0002,repair_human_002_job_0002_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0002_gemini_2_5_flash_image_00.png,success,"A realistic image of exactly 6 matte black standard sewing buttons and one blue-and-white striped small box on a crowded kitchen counter with utensils nearby.
+
+Important generation instructions:
+- Make sure that there are exactly 6 standard sewing buttons; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0003_gpt_image_1_00,repair_job_human_0003,repair_human_003_job_0003_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0003_gpt_image_1_00.png,success,"A realistic image of exactly 6 glossy white coins and one blue-and-white striped napkin on a crowded kitchen counter with utensils nearby.
+
+Important generation instructions:
+- Make it clear and easy to judge that the object generated is clearly recognizable as coin, not a vague or ambiguous object-like shape.
+- Make sure that there are exactly 6 coins; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0004_gemini_2_5_flash_image_00,repair_job_human_0004,repair_human_004_job_0004_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0004_gemini_2_5_flash_image_00.png,success,"A realistic image of exactly 5 plastic coins and one reflective metallic die on a picnic blanket with many small objects.
+
+Important generation instructions:
+- Make sure that there are exactly 5 coins; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0005_gpt_image_1_00,repair_job_human_0005,repair_human_005_job_0005_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0005_gpt_image_1_00.png,success,"A realistic image of exactly 5 ceramic coins and one black-and-white checkered food container on a picnic blanket with many small objects.
+
+Important generation instructions:
+- Make sure that there are exactly 5 coins; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0006_gemini_2_5_flash_image_00,repair_job_human_0006,repair_human_006_job_0006_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0006_gemini_2_5_flash_image_00.png,success,"A clear image of exactly 5 matte black thumbtacks and one white speckled sheet of paper on a clean surface with a few unrelated objects.
+
+Important generation instructions:
+- Make sure that there are exactly 5 thumbtacks; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0007_gpt_image_1_00,repair_job_human_0007,repair_human_007_job_0007_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0007_gpt_image_1_00.png,success,"A realistic image of exactly 5 plastic small flat washers and one reflective metallic bottle cap on a craft table with beads and art supplies.
+
+Important generation instructions:
+- Make sure that there are exactly 5 small flat washers; do not generate more or fewer, and do not add extra target-like objects.
+- Make it clear and easy to judge that the small flat washer has plastic material.",2026-06-01T02:46:59,
+repair_job_human_0008_gpt_image_1_00,repair_job_human_0008,repair_human_008_job_0009_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0008_gpt_image_1_00.png,success,"A realistic image of exactly 6 ceramic coins and one blue-and-white striped tray on a craft table with beads and art supplies.
+
+Important generation instructions:
+- Make sure that the object generated is exactly coin; do not replace it with a different object category.
+- Make sure that there are exactly 6 coins; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0009_gemini_2_5_flash_image_00,repair_job_human_0009,repair_human_009_job_0014_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0009_gemini_2_5_flash_image_00.png,success,"A realistic image of exactly 5 glossy white standard sewing buttons and one white speckled notebook on a cluttered desk with many office supplies.
+
+Important generation instructions:
+- Make sure that there are exactly 5 standard sewing buttons; do not generate more or fewer, and do not add extra target-like objects.
+- Make sure that the notebook has white speckled pattern; apply this pattern to the correct object.",2026-06-01T02:46:59,
+repair_job_human_0010_gemini_2_5_flash_image_00,repair_job_human_0010,repair_human_010_job_0016_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0010_gemini_2_5_flash_image_00.png,success,"A realistic image of exactly 5 ceramic small paper clips and one reflective metallic cup on a picnic blanket with many small objects.
+
+Important generation instructions:
+- Make it clear and easy to judge that the object generated is clearly recognizable as small paper clip, not a vague or ambiguous object-like shape.",2026-06-01T02:46:59,
+repair_job_human_0011_gpt_image_1_00,repair_job_human_0011,repair_human_011_job_0017_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0011_gpt_image_1_00.png,success,"A realistic image of exactly 5 glossy white small flat washers and one black-and-white checkered cup on a cluttered desk with many office supplies.
+
+Important generation instructions:
+- Make sure that there are exactly 5 small flat washers; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0012_gemini_2_5_flash_image_00,repair_job_human_0012,repair_human_012_job_0018_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0012_gemini_2_5_flash_image_00.png,success,"A clear image of exactly 5 ceramic thin rubber bands and one red-and-white striped cup on a clean surface with a few unrelated objects.
+
+Important generation instructions:
+- Make sure that there are exactly 5 thin rubber bands; do not generate more or fewer, and do not add extra target-like objects.
+- Make sure that the thin rubber band has ceramic material; apply this material to the correct object.",2026-06-01T02:46:59,
+repair_job_human_0013_gpt_image_1_00,repair_job_human_0013,repair_human_013_job_0019_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0013_gpt_image_1_00.png,success,"A realistic image of exactly 5 reflective metallic thumbtacks and one plastic standard sewing button on a picnic blanket with many small objects.
+
+Important generation instructions:
+- Make sure that there are exactly 5 thumbtacks; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0014_gemini_2_5_flash_image_00,repair_job_human_0014,repair_human_014_job_0022_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0014_gemini_2_5_flash_image_00.png,success,"A realistic image of exactly 3 plastic standard safety pins and one blue-and-white striped index card on a workbench with tools.
+
+Important generation instructions:
+- Make sure that the standard safety pin has plastic material; apply this material to the correct object.
+- Make it clear and easy to judge that the index card has blue-and-white striped pattern.",2026-06-01T02:46:59,
+repair_job_human_0015_gpt_image_1_00,repair_job_human_0015,repair_human_015_job_0023_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0015_gpt_image_1_00.png,success,"A realistic image of exactly 5 plastic coins and one matte black marble on a picnic blanket with many small objects.
+
+Important generation instructions:
+- Make sure that there are exactly 5 coins; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0016_gemini_2_5_flash_image_00,repair_job_human_0016,repair_human_016_job_0024_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0016_gemini_2_5_flash_image_00.png,success,"A realistic image of exactly 4 plastic thin rubber bands and one red-and-white striped index card on a workbench with tools.
+
+Important generation instructions:
+- Make it clear and easy to judge that there are exactly 4 thin rubber bands, with each target object separated and easy to count.
+- Make it clear and easy to judge that the index card has red-and-white striped pattern.",2026-06-01T02:46:59,
+repair_job_human_0017_gpt_image_1_00,repair_job_human_0017,repair_human_017_job_0025_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0017_gpt_image_1_00.png,success,"A realistic image of exactly 4 glossy white thumbtacks and one matte black tray on a picnic blanket with many small objects.
+
+Important generation instructions:
+- Make sure that there are exactly 4 thumbtacks; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0018_gemini_2_5_flash_image_00,repair_job_human_0018,repair_human_018_job_0026_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0018_gemini_2_5_flash_image_00.png,success,"A clear image of exactly 4 matte black dice and one transparent glass thin rubber band on a clean surface with a few unrelated objects.
+
+Important generation instructions:
+- Make sure that there are exactly 4 dice; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0019_gemini_2_5_flash_image_00,repair_job_human_0019,repair_human_019_job_0028_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0019_gemini_2_5_flash_image_00.png,success,"A realistic image of exactly 3 glossy white small paper clips and one red-and-white striped sheet of paper on a crowded kitchen counter with utensils nearby.
+
+Important generation instructions:
+- Make sure that the object generated is exactly small paper clip; do not replace it with a different object category.",2026-06-01T02:46:59,
+repair_job_human_0020_gpt_image_1_00,repair_job_human_0020,repair_human_020_job_0029_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0020_gpt_image_1_00.png,success,"A realistic image of exactly 6 plastic thin rubber bands and one glossy white die on a cluttered desk with many office supplies.
+
+Important generation instructions:
+- Make sure that there are exactly 6 thin rubber bands; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0021_gemini_2_5_flash_image_00,repair_job_human_0021,repair_human_021_job_0030_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0021_gemini_2_5_flash_image_00.png,success,"A realistic image of exactly 3 ceramic small paper clips and one black-and-white checkered food container on a shelf full of books and decorations.
+
+Important generation instructions:
+- Make it clear and easy to judge that the object generated is clearly recognizable as small paper clip, not a vague or ambiguous object-like shape.
+- Make it clear and easy to judge that the object generated is clearly recognizable as food container, not a vague or ambiguous object-like shape.",2026-06-01T02:46:59,
+repair_job_human_0022_gpt_image_1_00,repair_job_human_0022,repair_human_022_job_0031_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0022_gpt_image_1_00.png,success,"A realistic image of exactly 4 ceramic small flat washers and one white speckled cup on a crowded kitchen counter with utensils nearby.
+
+Important generation instructions:
+- Make sure that there are exactly 4 small flat washers; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0023_gemini_2_5_flash_image_00,repair_job_human_0023,repair_human_023_job_0032_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0023_gemini_2_5_flash_image_00.png,success,"A clear image of exactly 5 plastic small paper clips and one yellow-and-green polka-dotted napkin on a lightly cluttered tabletop.
+
+Important generation instructions:
+- Make sure that the object generated is exactly small paper clip; do not replace it with a different object category.",2026-06-01T02:46:59,
+repair_job_human_0024_gpt_image_1_00,repair_job_human_0024,repair_human_024_job_0037_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0024_gpt_image_1_00.png,success,"A realistic image of a glossy white standard safety pin inside a transparent glass small box on a crowded kitchen counter with utensils nearby.
+
+Important generation instructions:
+- Make it clear and easy to judge that the standard safety pin has glossy white material.",2026-06-01T02:46:59,
+repair_job_human_0025_gemini_2_5_flash_image_00,repair_job_human_0025,repair_human_025_job_0038_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0025_gemini_2_5_flash_image_00.png,success,"A realistic image of a ceramic thin rubber band on top of a yellow-and-green polka-dotted cutting board on a workbench with tools.
+
+Important generation instructions:
+- Make it clear and easy to judge that the object generated is clearly recognizable as cutting board, not a vague or ambiguous object-like shape.
+- Make sure that the cutting board has yellow-and-green polka-dotted pattern; apply this pattern to the correct object.",2026-06-01T02:46:59,
+repair_job_human_0026_gpt_image_1_00,repair_job_human_0026,repair_human_026_job_0039_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0026_gpt_image_1_00.png,success,"A clear image of a matte black coin on top of a reflective metallic food container on a clean surface with a few unrelated objects.
+
+Important generation instructions:
+- Make it clear and easy to judge that the object generated is clearly recognizable as coin, not a vague or ambiguous object-like shape.",2026-06-01T02:46:59,
+repair_job_human_0027_gpt_image_1_00,repair_job_human_0027,repair_human_027_job_0045_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0027_gpt_image_1_00.png,success,"A realistic image of a red-and-white striped cutting board under a ceramic small paper clip on a workbench with tools.
+
+Important generation instructions:
+- Make it clear and easy to judge that the object generated is clearly recognizable as small paper clip, not a vague or ambiguous object-like shape.",2026-06-01T02:46:59,
+repair_job_human_0028_gemini_2_5_flash_image_00,repair_job_human_0028,repair_human_028_job_0046_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0028_gemini_2_5_flash_image_00.png,success,"A clear image of a plastic tray to the right of a blue-and-white striped cup on a clean surface with a few unrelated objects.
+
+Important generation instructions:
+- Make sure that the object generated is exactly tray; do not replace it with a different object category.",2026-06-01T02:46:59,
+repair_job_human_0029_gemini_2_5_flash_image_00,repair_job_human_0029,repair_human_029_job_0048_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0029_gemini_2_5_flash_image_00.png,success,"A realistic image of a blue-and-white striped index card under a glossy white die on a shelf full of books and decorations.
+
+Important generation instructions:
+- Make it clear and easy to judge that the index card has blue-and-white striped pattern.
+- Make sure that the index card is clearly under the die.",2026-06-01T02:46:59,
+repair_job_human_0030_gemini_2_5_flash_image_00,repair_job_human_0030,repair_human_030_job_0050_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0030_gemini_2_5_flash_image_00.png,success,"A realistic image of a glossy white small paper clip inside a white speckled serving bowl on a craft table with beads and art supplies.
+
+Important generation instructions:
+- Make sure that the object generated is exactly small paper clip; do not replace it with a different object category.",2026-06-01T02:46:59,
+repair_job_human_0031_gpt_image_1_00,repair_job_human_0031,repair_human_031_job_0051_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0031_gpt_image_1_00.png,success,"A realistic image of a yellow-and-green polka-dotted food container to the left of a blue-and-white striped plate on a shelf full of books and decorations.
+
+Important generation instructions:
+- Make it clear and easy to judge that the object generated is clearly recognizable as food container, not a vague or ambiguous object-like shape.",2026-06-01T02:46:59,
+repair_job_human_0032_gemini_2_5_flash_image_00,repair_job_human_0032,repair_human_032_job_0052_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0032_gemini_2_5_flash_image_00.png,success,"A realistic image of a matte black standard sewing button to the left of a ceramic coin on a craft table with beads and art supplies.
+
+Important generation instructions:
+- Make sure that the object generated is exactly coin; do not replace it with a different object category.",2026-06-01T02:46:59,
+repair_job_human_0033_gpt_image_1_00,repair_job_human_0033,repair_human_033_job_0053_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0033_gpt_image_1_00.png,success,"A realistic image of a black-and-white checkered napkin under a glossy white marble on a cluttered desk with many office supplies.
+
+Important generation instructions:
+- Make sure that the object generated is exactly marble; do not replace it with a different object category.
+- Make it clear and easy to judge that the marble has glossy white material.
+- Make it clear and easy to judge that the napkin is under the marble, with both objects visible and the spatial relation easy to judge.",2026-06-01T02:46:59,
+repair_job_human_0034_gemini_2_5_flash_image_00,repair_job_human_0034,repair_human_034_job_0054_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0034_gemini_2_5_flash_image_00.png,success,"A realistic image of a glossy white small paper clip to the left of a transparent glass serving bowl on a picnic blanket with many small objects.
+
+Important generation instructions:
+- Make sure that the object generated is exactly small paper clip; do not replace it with a different object category.
+- Make sure that the object generated is exactly serving bowl; do not replace it with a different object category.",2026-06-01T02:46:59,
+repair_job_human_0035_gpt_image_1_00,repair_job_human_0035,repair_human_035_job_0055_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0035_gpt_image_1_00.png,success,"A realistic image of a matte black serving bowl to the right of a white speckled tray on a shelf full of books and decorations.
+
+Important generation instructions:
+- Make sure that the serving bowl is clearly to the right of the tray.",2026-06-01T02:46:59,
+repair_job_human_0036_gpt_image_1_00,repair_job_human_0036,repair_human_036_job_0059_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0036_gpt_image_1_00.png,success,"A clear image of a ceramic bottle cap outside a plastic tray on a lightly cluttered tabletop.
+
+Important generation instructions:
+- Make it clear and easy to judge that the object generated is clearly recognizable as bottle cap, not a vague or ambiguous object-like shape.",2026-06-01T02:46:59,
+repair_job_human_0037_gemini_2_5_flash_image_00,repair_job_human_0037,repair_human_037_job_0064_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0037_gemini_2_5_flash_image_00.png,success,"A realistic image of a transparent glass coin on top of a matte black tray on a picnic blanket with many small objects.
+
+Important generation instructions:
+- Make sure that the object generated is exactly coin; do not replace it with a different object category.",2026-06-01T02:46:59,
+repair_job_human_0038_gpt_image_1_00,repair_job_human_0038,repair_human_038_job_0065_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0038_gpt_image_1_00.png,success,"A realistic image of a reflective metallic thin rubber band outside a plastic tray on a crowded kitchen counter with utensils nearby.
+
+Important generation instructions:
+- Make sure that the thin rubber band has reflective metallic material; apply this material to the correct object.",2026-06-01T02:46:59,
+repair_job_human_0039_gpt_image_1_00,repair_job_human_0039,repair_human_039_job_0069_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0039_gpt_image_1_00.png,success,"A realistic image of a blue-and-white striped cutting board under a ceramic coin on a craft table with beads and art supplies.
+
+Important generation instructions:
+- Make it clear and easy to judge that the object generated is clearly recognizable as cutting board, not a vague or ambiguous object-like shape.",2026-06-01T02:46:59,
+repair_job_human_0040_gemini_2_5_flash_image_00,repair_job_human_0040,repair_human_040_job_0072_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0040_gemini_2_5_flash_image_00.png,success,"A realistic image of a multicolored index card under a transparent glass bottle cap on a shelf full of books and decorations.
+
+Important generation instructions:
+- Make it clear and easy to judge that the object generated is clearly recognizable as bottle cap, not a vague or ambiguous object-like shape.
+- Make sure that the index card is clearly under the bottle cap.",2026-06-01T02:46:59,
+repair_job_human_0041_gemini_2_5_flash_image_00,repair_job_human_0041,repair_human_041_job_0074_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0041_gemini_2_5_flash_image_00.png,success,"A clear image of exactly 4 bottle caps outside a tray on a lightly cluttered tabletop.
+
+Important generation instructions:
+- Make sure that there are exactly 4 bottle caps; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0042_gemini_2_5_flash_image_00,repair_job_human_0042,repair_human_042_job_0076_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0042_gemini_2_5_flash_image_00.png,success,"A realistic image of exactly 4 dice inside a cup on a shelf full of books and decorations.
+
+Important generation instructions:
+- Make sure that there are exactly 4 dice; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0043_gemini_2_5_flash_image_00,repair_job_human_0043,repair_human_043_job_0078_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0043_gemini_2_5_flash_image_00.png,success,"A realistic image of exactly 4 standard safety pins outside a food container on a cluttered desk with many office supplies.
+
+Important generation instructions:
+- Make sure that there are exactly 4 standard safety pins; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0044_gemini_2_5_flash_image_00,repair_job_human_0044,repair_human_044_job_0080_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0044_gemini_2_5_flash_image_00.png,success,"A realistic image of exactly 3 standard sewing buttons outside a tray on a shelf full of books and decorations.
+
+Important generation instructions:
+- Make sure that the object generated is exactly tray; do not replace it with a different object category.
+- Make sure that there are exactly 3 standard sewing buttons; do not generate more or fewer, and do not add extra target-like objects.
+- Make it clear and easy to judge that the standard sewing button is outside the tray, with both objects visible and the spatial relation easy to judge.",2026-06-01T02:46:59,
+repair_job_human_0045_gemini_2_5_flash_image_00,repair_job_human_0045,repair_human_045_job_0082_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0045_gemini_2_5_flash_image_00.png,success,"A realistic image of exactly 6 standard safety pins to the right of a plate on a shelf full of books and decorations.
+
+Important generation instructions:
+- Make sure that there are exactly 6 standard safety pins; do not generate more or fewer, and do not add extra target-like objects.
+- Make sure that the standard safety pin is clearly to the right of the plate.",2026-06-01T02:46:59,
+repair_job_human_0046_gpt_image_1_00,repair_job_human_0046,repair_human_046_job_0083_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0046_gpt_image_1_00.png,success,"A realistic image of exactly 4 marbles to the left of a serving bowl on a crowded kitchen counter with utensils nearby.
+
+Important generation instructions:
+- Make sure that there are exactly 4 marbles; do not generate more or fewer, and do not add extra target-like objects.
+- Make sure that the marble is clearly to the left of the serving bowl.",2026-06-01T02:46:59,
+repair_job_human_0047_gemini_2_5_flash_image_00,repair_job_human_0047,repair_human_047_job_0084_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0047_gemini_2_5_flash_image_00.png,success,"A realistic image of exactly 5 standard safety pins to the left of a napkin on a shelf full of books and decorations.
+
+Important generation instructions:
+- Make sure that the standard safety pin is clearly to the left of the napkin.",2026-06-01T02:46:59,
+repair_job_human_0048_gemini_2_5_flash_image_00,repair_job_human_0048,repair_human_048_job_0086_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0048_gemini_2_5_flash_image_00.png,success,"A realistic image of exactly 3 small paper clips to the right of a marble on a workbench with tools.
+
+Important generation instructions:
+- Make sure that there are exactly 3 small paper clips; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0049_gpt_image_1_00,repair_job_human_0049,repair_human_049_job_0087_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0049_gpt_image_1_00.png,success,"A realistic image of exactly 3 thumbtacks outside a food container on a shelf full of books and decorations.
+
+Important generation instructions:
+- Make sure that there are exactly 3 thumbtacks; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0050_gpt_image_1_00,repair_job_human_0050,repair_human_050_job_0089_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0050_gpt_image_1_00.png,success,"A clear image of exactly 5 thin rubber bands inside a cup on a lightly cluttered tabletop.
+
+Important generation instructions:
+- Make it clear and easy to judge that there are exactly 5 thin rubber bands, with each target object separated and easy to count.",2026-06-01T02:46:59,
+repair_job_human_0051_gemini_2_5_flash_image_00,repair_job_human_0051,repair_human_051_job_0090_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0051_gemini_2_5_flash_image_00.png,success,"A clear image of exactly 6 thin rubber bands on top of a cutting board on a clean surface with a few unrelated objects.
+
+Important generation instructions:
+- Make sure that there are exactly 6 thin rubber bands; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0052_gemini_2_5_flash_image_00,repair_job_human_0052,repair_human_052_job_0092_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0052_gemini_2_5_flash_image_00.png,success,"A realistic image of exactly 4 thumbtacks outside a food container on a picnic blanket with many small objects.
+
+Important generation instructions:
+- Make it clear and easy to judge that the object generated is clearly recognizable as thumbtack, not a vague or ambiguous object-like shape.",2026-06-01T02:46:59,
+repair_job_human_0053_gpt_image_1_00,repair_job_human_0053,repair_human_053_job_0093_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0053_gpt_image_1_00.png,success,"A realistic image of exactly 5 coins on top of a notebook on a crowded kitchen counter with utensils nearby.
+
+Important generation instructions:
+- Make sure that there are exactly 5 coins; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0054_gpt_image_1_00,repair_job_human_0054,repair_human_054_job_0095_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0054_gpt_image_1_00.png,success,"A realistic image of exactly 6 marbles on top of a food container on a crowded kitchen counter with utensils nearby.
+
+Important generation instructions:
+- Make sure that there are exactly 6 marbles; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0055_gemini_2_5_flash_image_00,repair_job_human_0055,repair_human_055_job_0096_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0055_gemini_2_5_flash_image_00.png,success,"A realistic image of exactly 4 small paper clips inside a small box on a shelf full of books and decorations.
+
+Important generation instructions:
+- Make it clear and easy to judge that there are exactly 4 small paper clips, with each target object separated and easy to count.",2026-06-01T02:46:59,
+repair_job_human_0056_gpt_image_1_00,repair_job_human_0056,repair_human_056_job_0101_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0056_gpt_image_1_00.png,success,"A realistic image of exactly 5 small paper clips to the left of a tray on a cluttered desk with many office supplies.
+
+Important generation instructions:
+- Make it clear and easy to judge that the object generated is clearly recognizable as tray, not a vague or ambiguous object-like shape.",2026-06-01T02:46:59,
+repair_job_human_0057_gemini_2_5_flash_image_00,repair_job_human_0057,repair_human_057_job_0102_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0057_gemini_2_5_flash_image_00.png,success,"A realistic image of exactly 4 thumbtacks to the left of a plate on a cluttered desk with many office supplies.
+
+Important generation instructions:
+- Make sure that there are exactly 4 thumbtacks; do not generate more or fewer, and do not add extra target-like objects.
+- Make sure that the thumbtack is clearly to the left of the plate.",2026-06-01T02:46:59,
+repair_job_human_0058_gpt_image_1_00,repair_job_human_0058,repair_human_058_job_0105_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0058_gpt_image_1_00.png,success,"A clear image of exactly 5 thumbtacks inside a food container on a lightly cluttered tabletop.
+
+Important generation instructions:
+- Make it clear and easy to judge that the object generated is clearly recognizable as thumbtack, not a vague or ambiguous object-like shape.",2026-06-01T02:46:59,
+repair_job_human_0059_gemini_2_5_flash_image_00,repair_job_human_0059,repair_human_059_job_0106_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0059_gemini_2_5_flash_image_00.png,success,"A realistic image of exactly 4 dice inside a tray on a workbench with tools.
+
+Important generation instructions:
+- Make sure that the object generated is exactly tray; do not replace it with a different object category.",2026-06-01T02:46:59,
+repair_job_human_0060_gemini_2_5_flash_image_00,repair_job_human_0060,repair_human_060_job_0110_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0060_gemini_2_5_flash_image_00.png,success,"A clear image of a red-and-white striped cutting board and a glossy white thumbtack on a plain desk with soft shadows.
+
+Important generation instructions:
+- Make it clear and easy to judge that the object generated is clearly recognizable as cutting board, not a vague or ambiguous object-like shape.",2026-06-01T02:46:59,
+repair_job_human_0061_gemini_2_5_flash_image_00,repair_job_human_0061,repair_human_061_job_0114_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0061_gemini_2_5_flash_image_00.png,success,"A clear image of a ceramic tray and a yellow-and-green polka-dotted cup on a clean surface with a few unrelated objects.
+
+Important generation instructions:
+- Make it clear and easy to judge that the object generated is clearly recognizable as tray, not a vague or ambiguous object-like shape.",2026-06-01T02:46:59,
+repair_job_human_0062_gemini_2_5_flash_image_00,repair_job_human_0062,repair_human_062_job_0116_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0062_gemini_2_5_flash_image_00.png,success,"A clear image of a yellow-and-green polka-dotted sheet of paper and a matte black bottle cap on a lightly cluttered tabletop.
+
+Important generation instructions:
+- Make it clear and easy to judge that the object generated is clearly recognizable as bottle cap, not a vague or ambiguous object-like shape.",2026-06-01T02:46:59,
+repair_job_human_0063_gemini_2_5_flash_image_00,repair_job_human_0063,repair_human_063_job_0118_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0063_gemini_2_5_flash_image_00.png,success,"A clear image of a multicolored cup and a glossy white coin on a lightly cluttered tabletop.
+
+Important generation instructions:
+- Make sure that the object generated is exactly coin; do not replace it with a different object category.",2026-06-01T02:46:59,
+repair_job_human_0064_gemini_2_5_flash_image_00,repair_job_human_0064,repair_human_064_job_0126_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0064_gemini_2_5_flash_image_00.png,success,"A realistic image of a plastic standard safety pin and a ceramic small paper clip on a workbench with tools.
+
+Important generation instructions:
+- Make it clear and easy to judge that the object generated is clearly recognizable as small paper clip, not a vague or ambiguous object-like shape.",2026-06-01T02:46:59,
+repair_job_human_0065_gemini_2_5_flash_image_00,repair_job_human_0065,repair_human_065_job_0128_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0065_gemini_2_5_flash_image_00.png,success,"A clear image of a white speckled index card and a glossy white coin on a lightly cluttered tabletop.
+
+Important generation instructions:
+- Make sure that the object generated is exactly index card; do not replace it with a different object category.
+- Make it clear and easy to judge that the object generated is clearly recognizable as coin, not a vague or ambiguous object-like shape.",2026-06-01T02:46:59,
+repair_job_human_0066_gpt_image_1_00,repair_job_human_0066,repair_human_066_job_0129_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0066_gpt_image_1_00.png,success,"A realistic image of a white speckled food container and a blue-and-white striped serving bowl on a picnic blanket with many small objects.
+
+Important generation instructions:
+- Make it clear and easy to judge that the object generated is clearly recognizable as food container, not a vague or ambiguous object-like shape.",2026-06-01T02:46:59,
+repair_job_human_0067_gemini_2_5_flash_image_00,repair_job_human_0067,repair_human_067_job_0138_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0067_gemini_2_5_flash_image_00.png,success,"A clear image of exactly 5 small flat washers on a plain desk with soft shadows.
+
+Important generation instructions:
+- Make sure that there are exactly 5 small flat washers; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0068_gemini_2_5_flash_image_00,repair_job_human_0068,repair_human_068_job_0140_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0068_gemini_2_5_flash_image_00.png,success,"A realistic image of exactly 4 thin rubber bands on a craft table with beads and art supplies.
+
+Important generation instructions:
+- Make sure that there are exactly 4 thin rubber bands; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0069_gemini_2_5_flash_image_00,repair_job_human_0069,repair_human_069_job_0142_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0069_gemini_2_5_flash_image_00.png,success,"A realistic image of exactly 6 thin rubber bands on a craft table with beads and art supplies.
+
+Important generation instructions:
+- Make sure that there are exactly 6 thin rubber bands; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0070_gemini_2_5_flash_image_00,repair_job_human_0070,repair_human_070_job_0144_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0070_gemini_2_5_flash_image_00.png,success,"A realistic image of exactly 6 standard sewing buttons on a workbench with tools.
+
+Important generation instructions:
+- Make sure that there are exactly 6 standard sewing buttons; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0071_gemini_2_5_flash_image_00,repair_job_human_0071,repair_human_071_job_0148_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0071_gemini_2_5_flash_image_00.png,success,"A clear image of exactly 6 small paper clips on a plain desk with soft shadows.
+
+Important generation instructions:
+- Make sure that there are exactly 6 small paper clips; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0072_gemini_2_5_flash_image_00,repair_job_human_0072,repair_human_072_job_0150_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0072_gemini_2_5_flash_image_00.png,success,"A clear image of exactly 6 small flat washers on a plain desk with soft shadows.
+
+Important generation instructions:
+- Make sure that there are exactly 6 small flat washers; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0073_gpt_image_1_00,repair_job_human_0073,repair_human_073_job_0151_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0073_gpt_image_1_00.png,success,"A realistic image of exactly 6 coins on a crowded kitchen counter with utensils nearby.
+
+Important generation instructions:
+- Make sure that there are exactly 6 coins; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0074_gemini_2_5_flash_image_00,repair_job_human_0074,repair_human_074_job_0154_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0074_gemini_2_5_flash_image_00.png,success,"A clear image of exactly 5 thin rubber bands on a lightly cluttered tabletop.
+
+Important generation instructions:
+- Make sure that there are exactly 5 thin rubber bands; do not generate more or fewer, and do not add extra target-like objects.",2026-06-01T02:46:59,
+repair_job_human_0075_gemini_2_5_flash_image_00,repair_job_human_0075,repair_human_075_job_0160_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0075_gemini_2_5_flash_image_00.png,success,"A realistic image of a serving bowl to the right of a small paper clip on a picnic blanket with many small objects.
+
+Important generation instructions:
+- Make sure that the object generated is exactly small paper clip; do not replace it with a different object category.",2026-06-01T02:46:59,
+repair_job_human_0076_gemini_2_5_flash_image_00,repair_job_human_0076,repair_human_076_job_0166_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0076_gemini_2_5_flash_image_00.png,success,"A clear image of a die inside a tray on a clean surface with a few unrelated objects.
+
+Important generation instructions:
+- Make it clear and easy to judge that the object generated is clearly recognizable as tray, not a vague or ambiguous object-like shape.",2026-06-01T02:46:59,
+repair_job_human_0077_gpt_image_1_00,repair_job_human_0077,repair_human_077_job_0171_gpt_image_1_00,openai,gpt-image-1,0,../data/repaired/human_triggered/images/repair_job_human_0077_gpt_image_1_00.png,success,"A clear image of a die outside a cup on a lightly cluttered tabletop.
+
+Important generation instructions:
+- Make it clear and easy to judge that the object generated is clearly recognizable as cup, not a vague or ambiguous object-like shape.",2026-06-01T02:46:59,
+repair_job_human_0078_gemini_2_5_flash_image_00,repair_job_human_0078,repair_human_078_job_0172_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0078_gemini_2_5_flash_image_00.png,success,"A realistic image of a small paper clip on top of a serving bowl on a cluttered desk with many office supplies.
+
+Important generation instructions:
+- Make sure that the small paper clip is clearly on top of the serving bowl.",2026-06-01T02:46:59,
+repair_job_human_0079_gemini_2_5_flash_image_00,repair_job_human_0079,repair_human_079_job_0174_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0079_gemini_2_5_flash_image_00.png,success,"A clear image of a small flat washer outside a tray on a lightly cluttered tabletop.
+
+Important generation instructions:
+- Make sure that the object generated is exactly tray; do not replace it with a different object category.",2026-06-01T02:46:59,
+repair_job_human_0080_gemini_2_5_flash_image_00,repair_job_human_0080,repair_human_080_job_0176_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0080_gemini_2_5_flash_image_00.png,success,"A clear image of a food container to the right of a small paper clip on a plain desk with soft shadows.
+
+Important generation instructions:
+- Make sure that the object generated is exactly small paper clip; do not replace it with a different object category.",2026-06-01T02:46:59,
+repair_job_human_0081_gemini_2_5_flash_image_00,repair_job_human_0081,repair_human_081_job_0178_gemini_2_5_flash_image_00,google,gemini-2.5-flash-image,0,../data/repaired/human_triggered/images/repair_job_human_0081_gemini_2_5_flash_image_00.png,success,"A realistic image of a small flat washer on top of a serving bowl on a workbench with tools.
+
+Important generation instructions:
+- Make sure that the object generated is exactly serving bowl; do not replace it with a different object category.",2026-06-01T02:46:59,

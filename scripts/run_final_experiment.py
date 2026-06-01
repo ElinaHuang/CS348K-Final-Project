@@ -23,7 +23,7 @@ def main():
     parser.add_argument("--config", default="../configs/final_experiment_config.yaml")
     parser.add_argument("--stage", required=True, choices=[
         "generate-prompts", "generate-images", "create-human-template", "run-vlm", "analyze-initial",
-        "generate-repairs-human", "generate-repairs-vlm"
+        "generate-repairs-human", "generate-repairs-vlm", "generate-repair-images-human", "generate-repair-images-vlm",
     ])
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
@@ -47,7 +47,44 @@ def main():
     elif args.stage in {"generate-repairs-human", "generate-repairs-vlm"}:
         source = "human" if args.stage.endswith("human") else "vlm"
         run([py, "generate_repair_prompts.py", "--config", args.config, "--trigger-source", source])
-    
+    elif args.stage in {"generate-repair-images-human", "generate-repair-images-vlm"}:
+        source = "human" if args.stage.endswith("human") else "vlm"
+        r = cfg["repair"]
+        prompts = r[f"repaired_prompts_{source}_csv"]
+        # Create a repair generation plan that keeps each repaired image on the same
+        # T2I provider/model as the source image. This makes before/after repair
+        # comparisons isolate the prompt repair rather than changing generators.
+        plan = f"../data/repaired/{source}_triggered/repaired_generation_plan.csv"
+        import csv
+        grammar_cfg = load_config(cfg["grammar"]["config"])
+        model_cfgs = {
+            (m.get("provider", ""), m.get("model_name", "")): m
+            for m in grammar_cfg.get("dataset", {}).get("t2i_models", [])
+        }
+        Path(plan).parent.mkdir(parents=True, exist_ok=True)
+        with open(prompts, newline='', encoding='utf-8') as f, open(plan, 'w', newline='', encoding='utf-8') as out:
+            reader = list(csv.DictReader(f))
+            writer = csv.DictWriter(out, fieldnames=["generation_job_id","prompt_id","provider","model_name","assignment_type","image_dir","size","quality","aspect_ratio"])
+            writer.writeheader()
+            for i, row in enumerate(reader, 1):
+                provider = row.get("source_provider", "")
+                model_name = row.get("source_model_name", "")
+                model_cfg = model_cfgs.get((provider, model_name), {})
+                writer.writerow({
+                    "generation_job_id": f"repair_job_{source}_{i:04d}",
+                    "prompt_id": row["prompt_id"],
+                    "provider": provider,
+                    "model_name": model_name,
+                    "assignment_type": f"repair_{source}_same_model",
+                    "image_dir": r[f"repaired_{source}_image_dir"],
+                    "size": model_cfg.get("size", ""),
+                    "quality": model_cfg.get("quality", ""),
+                    "aspect_ratio": model_cfg.get("aspect_ratio", ""),
+                })
+        cmd = [py, "generate_images.py", "--prompts", prompts, "--generation-plan", plan, "--out", r[f"repaired_{source}_generations_csv"]]
+        if args.dry_run: cmd.append("--dry-run")
+        run(cmd)
+
 
 if __name__ == "__main__":
     main()
