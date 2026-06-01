@@ -1,0 +1,7 @@
+group,num_examples,human_pass_rate,human_fail_rate,human_ambiguous_rate,vlm_pass_rate,vlm_fail_rate,vlm_ambiguous_rate,agreement,nonpass_precision,nonpass_recall,nonpass_f1,dimension,value
+prompt_family=combined_attribute_cardinality,36,0.3611,0.5556,0.0833,0.1944,0.7500,0.0556,0.6944,0.7586,0.9565,0.8462,prompt_family,combined_attribute_cardinality
+prompt_family=combined_spatial_attribute,36,0.5278,0.3056,0.1667,0.4167,0.4444,0.1389,0.6667,0.7143,0.8824,0.7895,prompt_family,combined_spatial_attribute
+prompt_family=combined_spatial_cardinality,36,0.4722,0.3889,0.1389,0.4444,0.5278,0.0278,0.7222,0.8500,0.8947,0.8718,prompt_family,combined_spatial_cardinality
+prompt_family=single_attribute,24,0.7083,0.0833,0.2083,0.5833,0.2500,0.1667,0.5417,0.4000,0.5714,0.4706,prompt_family,single_attribute
+prompt_family=single_cardinality,24,0.6667,0.3333,0.0000,0.6667,0.3333,0.0000,0.7500,0.6250,0.6250,0.6250,prompt_family,single_cardinality
+prompt_family=single_spatial,24,0.7083,0.2083,0.0833,0.7917,0.1667,0.0417,0.7917,0.8000,0.5714,0.6667,prompt_family,single_spatial

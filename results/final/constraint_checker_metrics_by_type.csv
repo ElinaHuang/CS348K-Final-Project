@@ -1,0 +1,5 @@
+group,num_examples,human_pass_rate,human_fail_rate,human_ambiguous_rate,vlm_pass_rate,vlm_fail_rate,vlm_ambiguous_rate,agreement,nonpass_precision,nonpass_recall,nonpass_f1,dimension,value
+constraint_type=attribute,192,0.9427,0.0260,0.0312,0.8125,0.1146,0.0729,0.8125,0.1944,0.6364,0.2979,constraint_type,attribute
+constraint_type=cardinality,96,0.5833,0.3854,0.0312,0.5104,0.4792,0.0104,0.7500,0.6809,0.8000,0.7356,constraint_type,cardinality
+constraint_type=object_identity,336,0.8780,0.0536,0.0685,0.8125,0.0952,0.0923,0.8214,0.4286,0.6585,0.5192,constraint_type,object_identity
+constraint_type=spatial_relation,96,0.8958,0.0833,0.0208,0.7500,0.2083,0.0417,0.7812,0.2917,0.7000,0.4118,constraint_type,spatial_relation

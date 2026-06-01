@@ -1,0 +1,3 @@
+group,num_examples,human_pass_rate,human_fail_rate,human_ambiguous_rate,vlm_pass_rate,vlm_fail_rate,vlm_ambiguous_rate,agreement,nonpass_precision,nonpass_recall,nonpass_f1,dimension,value
+scene_context_type=natural,118,0.5169,0.3814,0.1017,0.4407,0.5085,0.0508,0.7034,0.7424,0.8596,0.7967,scene_context_type,natural
+scene_context_type=simple,62,0.6129,0.2419,0.1452,0.5645,0.3226,0.1129,0.6774,0.6667,0.7500,0.7059,scene_context_type,simple

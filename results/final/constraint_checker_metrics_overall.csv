@@ -1,0 +1,2 @@
+group,num_examples,human_pass_rate,human_fail_rate,human_ambiguous_rate,vlm_pass_rate,vlm_fail_rate,vlm_ambiguous_rate,agreement,nonpass_precision,nonpass_recall,nonpass_f1,dimension,value
+overall,720,0.8583,0.0944,0.0472,0.7639,0.1667,0.0694,0.8042,0.4294,0.7157,0.5368,overall,overall

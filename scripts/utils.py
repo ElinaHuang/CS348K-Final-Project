@@ -141,3 +141,7 @@ def parse_vlm_response(raw_response: str) -> Tuple[str, str, str]:
     if len(found) == 1:
         return found[0], raw[:300], "fallback"
     return "ambiguous", raw[:300], "parse_error"
+
+
+def safe_div(num: float, den: float) -> float:
+    return num / den if den else 0.0

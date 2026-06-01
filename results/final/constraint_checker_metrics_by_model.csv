@@ -1,0 +1,3 @@
+group,num_examples,human_pass_rate,human_fail_rate,human_ambiguous_rate,vlm_pass_rate,vlm_fail_rate,vlm_ambiguous_rate,agreement,nonpass_precision,nonpass_recall,nonpass_f1,dimension,value
+model_name=gemini-2.5-flash-image,360,0.8194,0.1306,0.0500,0.7639,0.1861,0.0500,0.8028,0.5176,0.6769,0.5867,model_name,gemini-2.5-flash-image
+model_name=gpt-image-1,360,0.8972,0.0583,0.0444,0.7639,0.1472,0.0889,0.8056,0.3412,0.7838,0.4754,model_name,gpt-image-1
