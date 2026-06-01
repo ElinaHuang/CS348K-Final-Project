@@ -22,7 +22,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="../configs/final_experiment_config.yaml")
     parser.add_argument("--stage", required=True, choices=[
-        "generate-prompts", "generate-images", "create-human-template", "run-vlm", "analyze-initial"
+        "generate-prompts", "generate-images", "create-human-template", "run-vlm", "analyze-initial",
+        "generate-repairs-human", "generate-repairs-vlm"
     ])
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
@@ -43,7 +44,10 @@ def main():
         run(cmd)
     elif args.stage == "analyze-initial":
         run([py, "analyze_checker.py", "--human", cfg["human_labels"]["labels_csv"], "--vlm", cfg["vlm_checker"]["labels_csv"], "--prompts", cfg["prompt_subset"]["out_prompts"], "--generations", cfg["generation"]["generations_csv"], "--out-dir", cfg["analysis"]["out_dir"]])
-
+    elif args.stage in {"generate-repairs-human", "generate-repairs-vlm"}:
+        source = "human" if args.stage.endswith("human") else "vlm"
+        run([py, "generate_repair_prompts.py", "--config", args.config, "--trigger-source", source])
+    
 
 if __name__ == "__main__":
     main()
