@@ -1,0 +1,14 @@
+metric,value
+num_repair_attempts,81
+num_target_constraints,102
+target_fixed_rate,0.6471
+image_fixed_rate,0.5185
+repair_regression_rate,0.1111
+avg_regression_count,0.1111
+total_regressions,9
+total_hard_regressions,7
+total_soft_regressions,2
+unnecessary_repair_count,0
+unnecessary_repair_rate,0.0000
+unnecessary_repair_regression_count,0
+unnecessary_repair_regression_rate,0.0000

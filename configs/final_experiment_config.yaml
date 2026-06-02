@@ -47,10 +47,30 @@ repair:
 
   repair_human_target_results_csv: ../results/final/repair_human_target_results.csv
   repair_human_image_results_csv: ../results/final/repair_human_image_results.csv
-  repair_human_success_by_type_csv: ../results/final/repair_human_success_by_constraint_type.csv
-  repair_human_summary_metrics_csv: ../results/final/repair_human_summary_metrics.csv
+  repair_human_summary_csv: ../results/final/repair_human_summary.csv
+  repair_human_constraint_metrics_by_type_csv: ../results/final/repair_human_constraint_metrics_by_type.csv
+  repair_human_image_metrics_by_prompt_family_csv: ../results/final/repair_human_image_metrics_by_prompt_family.csv
+  repair_human_image_metrics_by_model_csv: ../results/final/repair_human_image_metrics_by_model.csv
+  repair_human_image_metrics_by_scene_context_type_csv: ../results/final/repair_human_image_metrics_by_scene_context_type.csv
+  repair_human_constraint_metrics_by_model_csv: ../results/final/repair_human_constraint_metrics_by_model.csv
+  repair_human_constraint_metrics_by_scene_context_type_csv: ../results/final/repair_human_constraint_metrics_by_scene_context_type.csv
 
   repair_vlm_target_results_csv: ../results/final/repair_vlm_target_results.csv
   repair_vlm_image_results_csv: ../results/final/repair_vlm_image_results.csv
-  repair_vlm_success_by_type_csv: ../results/final/repair_vlm_success_by_constraint_type.csv
-  repair_vlm_summary_metrics_csv: ../results/final/repair_vlm_summary_metrics.csv
+  repair_vlm_summary_csv: ../results/final/repair_vlm_summary.csv
+  repair_vlm_constraint_metrics_by_type_csv: ../results/final/repair_vlm_constraint_metrics_by_type.csv
+  repair_vlm_image_metrics_by_prompt_family_csv: ../results/final/repair_vlm_image_metrics_by_prompt_family.csv
+  repair_vlm_image_metrics_by_model_csv: ../results/final/repair_vlm_image_metrics_by_model.csv
+  repair_vlm_image_metrics_by_scene_context_type_csv: ../results/final/repair_vlm_image_metrics_by_scene_context_type.csv
+  repair_vlm_constraint_metrics_by_model_csv: ../results/final/repair_vlm_constraint_metrics_by_model.csv
+  repair_vlm_constraint_metrics_by_scene_context_type_csv: ../results/final/repair_vlm_constraint_metrics_by_scene_context_type.csv
+
+  repair_combined_target_results_csv: ../results/final/repair_combined_target_results.csv
+  repair_combined_image_results_csv: ../results/final/repair_combined_image_results.csv
+  repair_combined_summary_csv: ../results/final/repair_combined_summary.csv
+  repair_combined_constraint_metrics_by_type_csv: ../results/final/repair_combined_constraint_metrics_by_type.csv
+  repair_combined_image_metrics_by_prompt_family_csv: ../results/final/repair_combined_image_metrics_by_prompt_family.csv
+  repair_combined_image_metrics_by_model_csv: ../results/final/repair_combined_image_metrics_by_model.csv
+  repair_combined_image_metrics_by_scene_context_type_csv: ../results/final/repair_combined_image_metrics_by_scene_context_type.csv
+  repair_combined_constraint_metrics_by_model_csv: ../results/final/repair_combined_constraint_metrics_by_model.csv
+  repair_combined_constraint_metrics_by_scene_context_type_csv: ../results/final/repair_combined_constraint_metrics_by_scene_context_type.csv

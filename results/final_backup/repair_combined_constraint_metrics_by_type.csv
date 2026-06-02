@@ -1,0 +1,5 @@
+dimension,value,num_examples,before_pass_count,before_pass_rate,before_fail_count,before_fail_rate,before_ambiguous_count,before_ambiguous_rate,after_pass_count,after_pass_rate,after_fail_count,after_fail_rate,after_ambiguous_count,after_ambiguous_rate,pass_rate_delta,nonpass_to_pass_count,nonpass_to_pass_rate,pass_to_nonpass_count,pass_to_nonpass_rate,hard_regression_count,hard_regression_rate,soft_regression_count,soft_regression_rate
+constraint_type,attribute,214,194,0.9065,9,0.0421,11,0.0514,209,0.9766,5,0.0234,0,0.0000,0.0701,19,0.9500,4,0.0206,4,0.0206,0,0.0000
+constraint_type,cardinality,107,31,0.2897,70,0.6542,6,0.0561,56,0.5234,49,0.4579,2,0.0187,0.2336,34,0.4474,9,0.2903,9,0.2903,0,0.0000
+constraint_type,object_identity,332,259,0.7801,32,0.0964,41,0.1235,302,0.9096,19,0.0572,11,0.0331,0.1295,52,0.7123,9,0.0347,6,0.0232,3,0.0116
+constraint_type,spatial_relation,89,70,0.7865,15,0.1685,4,0.0449,83,0.9326,6,0.0674,0,0.0000,0.1461,15,0.7895,2,0.0286,2,0.0286,0,0.0000

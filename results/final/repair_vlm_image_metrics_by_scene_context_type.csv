@@ -1,0 +1,3 @@
+dimension,value,num_examples,before_pass_count,before_pass_rate,before_fail_count,before_fail_rate,before_ambiguous_count,before_ambiguous_rate,after_pass_count,after_pass_rate,after_fail_count,after_fail_rate,after_ambiguous_count,after_ambiguous_rate,pass_rate_delta,nonpass_to_pass_count,nonpass_to_pass_rate,pass_to_nonpass_count,pass_to_nonpass_rate,hard_regression_count,hard_regression_rate,soft_regression_count,soft_regression_rate
+scene_context_type,natural,66,17,0.2576,39,0.5909,10,0.1515,38,0.5758,27,0.4091,1,0.0152,0.3182,23,0.4694,2,0.1176,2,0.1176,0,0.0000
+scene_context_type,simple,27,9,0.3333,12,0.4444,6,0.2222,14,0.5185,12,0.4444,1,0.0370,0.1852,9,0.5000,4,0.4444,3,0.3333,1,0.1111

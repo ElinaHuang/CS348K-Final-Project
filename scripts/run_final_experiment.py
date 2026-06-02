@@ -24,7 +24,8 @@ def main():
     parser.add_argument("--stage", required=True, choices=[
         "generate-prompts", "generate-images", "create-human-template", "run-vlm", "analyze-initial",
         "generate-repairs-human", "generate-repairs-vlm", "generate-repair-images-human", "generate-repair-images-vlm",
-        "create-repair-label-template-human", "create-repair-label-template-vlm"
+        "create-repair-label-template-human", "create-repair-label-template-vlm",
+        "analyze-repair-human", "analyze-repair-vlm", "analyze-repair-combined"
     ])
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
@@ -88,6 +89,14 @@ def main():
     elif args.stage in {"create-repair-label-template-human", "create-repair-label-template-vlm"}:
         source = "human" if args.stage.endswith("human") else "vlm"; r = cfg["repair"]
         run([py, "create_repair_label_template.py", "--config", args.config, "--repaired-generations", r[f"repaired_{source}_generations_csv"], "--repair-targets", r[f"repair_targets_{source}_csv"], "--before-labels", cfg["human_labels"]["labels_csv"], "--constraints", cfg["prompt_subset"]["out_constraints"], "--out", r[f"repaired_{source}_labels_csv"]])
+    elif args.stage in {"analyze-repair-human", "analyze-repair-vlm", "analyze-repair-combined"}:
+        if args.stage.endswith("human"):
+            source = "human"
+        elif args.stage.endswith("vlm"):
+            source = "vlm"
+        else:
+            source = "combined"
+        run([py, "analyze_repair.py", "--config", args.config, "--trigger-source", source])
 
 
 if __name__ == "__main__":

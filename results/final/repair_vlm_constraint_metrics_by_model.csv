@@ -1,0 +1,3 @@
+dimension,value,num_examples,before_pass_count,before_pass_rate,before_fail_count,before_fail_rate,before_ambiguous_count,before_ambiguous_rate,after_pass_count,after_pass_rate,after_fail_count,after_fail_rate,after_ambiguous_count,after_ambiguous_rate,pass_rate_delta,nonpass_to_pass_count,nonpass_to_pass_rate,pass_to_nonpass_count,pass_to_nonpass_rate,hard_regression_count,hard_regression_rate,soft_regression_count,soft_regression_rate
+model_name,gemini-2.5-flash-image,208,156,0.7500,37,0.1779,15,0.0721,184,0.8846,23,0.1106,1,0.0048,0.1346,32,0.6154,4,0.0256,4,0.0256,0,0.0000
+model_name,gpt-image-1,193,159,0.8238,21,0.1088,13,0.0674,170,0.8808,21,0.1088,2,0.0104,0.0570,22,0.6471,11,0.0692,10,0.0629,1,0.0063

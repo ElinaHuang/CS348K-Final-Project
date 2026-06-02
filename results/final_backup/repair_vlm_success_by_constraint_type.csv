@@ -1,0 +1,5 @@
+target_constraint_type,num_targets,target_fixed_count,target_fixed_rate,num_repairs_with_regression,avg_regression_count
+attribute,36,36,1.0000,4,0.1143
+cardinality,47,24,0.5106,7,0.1702
+object_identity,63,53,0.8413,8,0.1379
+spatial_relation,24,23,0.9583,3,0.1250
