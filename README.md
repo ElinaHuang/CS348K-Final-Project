@@ -131,6 +131,9 @@ docs/
   final_report/                    # final report, slides, and report figures
   checkpoint1/, checkpoint2/       # archived checkpoint materials
 
+archive/
+  final_stage_backups/             # intermediate final-stage backup outputs; not used by the final pipeline
+
 tests/
   pytest tests for prompt generation, VLM prompts, retry logic,
   repair prompt generation, and analysis metrics
