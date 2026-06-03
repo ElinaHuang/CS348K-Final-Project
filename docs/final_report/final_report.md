@@ -72,7 +72,7 @@ The key abstraction in this project is one shared grammar. The grammar does not 
 
 This design is important because partial prompt-following failures are only useful if they can be localized. For example, if an image generated from the prompt “exactly 4 dice inside a cup” contains dice and a cup, but generates the wrong number of dice, the system should not only say that the whole image failed. It should be able to identify that the object identity and spatial relation were satisfied, while the cardinality requirement failed.
 
-<img src="./assets/figure2_approach_pipeline.png" width="90%">
+<img src="./assets/figure2_approach_pipeline.png" width="85%">
 
 **Figure 2. Example of the shared grammar.**
 
@@ -206,7 +206,7 @@ This section evaluates whether the proposed constraint-level workflow makes part
 
 The experiment follows the full generate-check-repair-evaluate workflow shown below.
 
-<img src="./assets/figure4_experiment_workflow.png" width="90%">
+<img src="./assets/figure4_experiment_workflow.png" width="85%">
 
 **Figure 4. Experimental workflow.**
 
