@@ -1,850 +1,367 @@
 # Constraint Grammar Design
 
-This document defines the first version of the constraint grammar for the CS348K final project. The grammar is intentionally controlled and may be revised after the first batch of image generation, human labeling, and VLM-checker experiments.
+This document describes the final constraint grammar used in the CS348K final project, **Constraint-Level Evaluation and Repair for Text-to-Image Prompt Following**.
 
-The grammar has three connected roles:
+The grammar is designed to generate prompts with controlled visual requirements. It is not intended to cover every possible user prompt; instead, it creates a manageable testbed where prompt requirements can be systematically generated, labeled, repaired, and analyzed.
 
-1. **Prompt generation:** generate controlled text-to-image prompts.
-2. **Constraint labeling:** define the atomic constraints that humans and VLM checkers should evaluate.
-3. **Prompt repair:** define constraint-type-aware rewrite rules for failed constraints.
-
-The main design principle is that the same constraint grammar should connect the whole pipeline:
+The machine-readable version of the grammar is:
 
 ```text
-prompt grammar
-→ expected atomic constraints
-→ human / VLM checking criteria
-→ failed constraint types
-→ targeted repair rules
+configs/grammar_config.yaml
 ```
 
----
+## 1. Design Goal
 
-## 1. Core Grammar Dimensions
+The central idea of the project is to use one shared grammar across the full generate-check-repair-evaluate workflow.
 
-The core grammar varies prompts along three dimensions.
+The grammar does not only generate the original text prompt. It also defines the atomic visual constraints implied by that prompt, and those constraints are reused for:
 
-### 1.1 Constraint Family
+1. human labeling,
+2. VLM checking,
+3. targeted repair prompt generation,
+4. image-level and constraint-level evaluation.
 
-The core constraint families are:
-
-1. **Object cardinality**: whether the image contains exactly the requested number of target objects.
-2. **Attribute binding**: whether a specified attribute, usually color, is attached to the intended object.
-3. **Spatial layout**: whether one object appears in the specified 2D spatial relation to another object.
-
-### 1.2 Scene Context
-
-The grammar includes two scene context levels:
-
-1. **Simple scenes**: controlled settings such as a clean tabletop or plain background.
-2. **Natural scenes**: richer scenes such as a kitchen, park, or living room.
-
-Simple scenes are used to reduce ambiguity. Natural scenes test whether the same constraints become harder in more realistic contexts.
-
-### 1.3 Constraint Composition
-
-The grammar includes:
-
-1. **Single-constraint prompts**: prompts primarily testing one constraint family.
-2. **Combined-constraint prompts**: prompts containing multiple atomic requirements, such as cardinality + attribute + spatial layout.
-
-Combined prompts are important because a generated image may satisfy some requirements while violating others.
-
----
-
-## 2. Shared Vocabulary
-
-The first version uses a small controlled vocabulary. This is not meant to cover all possible user prompts; it is meant to create a manageable, human-checkable testbed.
-
-### 2.1 Objects
-
-Initial object vocabulary:
-
-- cup
-- book
-- apple
-- ball
-- box
-- toy car
-
-These objects are chosen because they are common, visually recognizable, and easy to use in spatial and attribute constraints.
-
-### 2.2 Attributes
-
-Initial attribute vocabulary:
-
-- red
-- blue
-- green
-- yellow
-
-The first version focuses on color attributes because they are easy to check visually. More subtle attributes can be added later if needed.
-
-### 2.3 Numbers
-
-Initial cardinality vocabulary:
-
-- 2
-- 3
-- 4
-
-The grammar avoids larger counts in the first version because they are harder for both image generators and human annotators.
-
-### 2.4 Spatial Relations
-
-Initial spatial relation vocabulary:
-
-- left of
-- right of
-- above
-- below
-
-Spatial relations are interpreted in the 2D image coordinate system from the viewer's perspective.
-
-### 2.5 Scene Contexts
-
-Simple contexts:
-
-- on a clean tabletop
-- on a plain white background
-- on a clean floor
-
-Natural contexts:
-
-- in a kitchen
-- in a park
-- in a living room
-
-Style is not treated as a separate grammar dimension. Instead, the prompt prefix is tied to scene context:
-
-- simple scene: `A clean front-facing image of ...`
-- natural scene: `A realistic image of ...`
-
----
-
-## 3. Prompt Generation Grammar
-
-Prompt generation produces two structured artifacts:
-
-1. `prompts.csv`: one row per generated prompt.
-2. `constraints.csv`: one row per expected atomic constraint associated with each prompt.
-
-The generated image itself is not labeled at this stage. Labels are added later after image generation.
-
----
-
-### 3.1 Object Cardinality Prompts
-
-#### Template
+The shared representation is:
 
 ```text
-{prefix} exactly {number} {object_plural} {scene_context}.
+grammar instance
+→ prompt text
+→ atomic constraints
+→ human / VLM labels
+→ targeted repair instructions
+→ metrics
 ```
 
-#### Examples
+For example:
 
 ```text
-A clean front-facing image of exactly three cups on a clean tabletop.
-A clean front-facing image of exactly two apples on a plain white background.
-A realistic image of exactly four balls in a park.
+A realistic image of exactly 4 dice inside a cup on a shelf full of books and decorations.
 ```
 
-#### Expected Atomic Constraints
-
-A cardinality prompt generates at least two atomic constraints:
-
-1. `object_existence`: the target object should be visible.
-2. `cardinality`: the number of visible target objects should equal the requested count.
-
-Example constraints:
+is generated from a grammar instance with:
 
 ```text
-The cup should be clearly visible.
-There should be exactly three visible cups.
+number = 4
+object_1 = die / dice
+relation = inside
+object_2 = cup
+scene_context = on a shelf full of books and decorations
 ```
 
----
-
-### 3.2 Attribute Binding Prompts
-
-#### Template
+and decomposes into constraints such as:
 
 ```text
-{prefix} a {color_1} {object_1} next to a {color_2} {object_2} {scene_context}.
+dice exist
+cup exists
+count = exactly 4 dice
+dice inside cup
 ```
 
-#### Examples
+This decomposition makes partial prompt-following failures measurable and repairable.
+
+## 2. Grammar Components
+
+The final grammar varies prompts along six main dimensions.
+
+| Component         | Values / examples                                            | Purpose                                                      |
+| ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Prompt family     | single spatial, single attribute, single cardinality, spatial+attribute, spatial+cardinality, attribute+cardinality | controls which visual requirements appear in a prompt        |
+| Scene context     | simple, natural                                              | tests whether clutter/context complexity affects prompt-following |
+| Object groups     | small items, containers, surfaces                            | keeps object choices typed and compatible with relations     |
+| Attribute groups  | pattern/texture, material/finish                             | keeps object-attribute combinations meaningful               |
+| Spatial relations | left/right, on top of/under, inside/outside                  | uses relations that are natural and labelable                |
+| Numbers           | 3, 4, 5, 6                                                   | tests exact count control                                    |
+
+## 3. Object Vocabulary
+
+Objects are grouped by functional/visual role. These groups are used to make relation and attribute choices more physically plausible.
+
+### 3.1 Small Items
 
 ```text
-A clean front-facing image of a red cup next to a blue book on a clean tabletop.
-A clean front-facing image of a green apple next to a yellow box on a plain white background.
-A realistic image of a blue ball next to a red toy car in a park.
+small paper clip
+standard sewing button
+coin
+die
+marble
+standard safety pin
+thumbtack
+small flat washer
+bottle cap
+thin rubber band
 ```
 
-#### Expected Atomic Constraints
-
-An attribute-binding prompt generates atomic constraints such as:
-
-1. `object_existence`: object 1 should be visible.
-2. `object_existence`: object 2 should be visible.
-3. `attribute`: object 1 should have attribute 1.
-4. `attribute`: object 2 should have attribute 2.
-
-Example constraints:
+### 3.2 Containers
 
 ```text
-The cup should be clearly visible.
-The book should be clearly visible.
-The cup should be red.
-The book should be blue.
+small box
+serving bowl
+cup
+food container
+tray
 ```
 
-The important point is object-specific binding. A red object and a blue object appearing somewhere in the image is not enough; the red attribute should apply to the cup and the blue attribute should apply to the book.
-
----
-
-### 3.3 Spatial Layout Prompts
-
-#### Template
+### 3.3 Surfaces
 
 ```text
-{prefix} a {object_1} {relation_text} a {object_2} {scene_context}.
+notebook
+sheet of paper
+napkin
+index card
+plate
+cutting board
 ```
 
-#### Examples
+## 4. Attribute Vocabulary
+
+Plain single-color attributes are intentionally excluded from the final grammar because pilot generations made them too easy. Instead, color is combined with pattern, texture, material, or finish.
+
+### 4.1 Pattern / Texture Attributes
+
+Allowed object groups:
 
 ```text
-A clean front-facing image of a cup to the left of a book on a clean tabletop.
-A clean front-facing image of an apple to the right of a box on a plain white background.
-A realistic image of a ball above a toy car in a park.
-A realistic image of a book below an apple in a living room.
+surfaces, containers
 ```
 
-#### Expected Atomic Constraints
-
-A spatial-layout prompt generates atomic constraints such as:
-
-1. `object_existence`: object 1 should be visible.
-2. `object_existence`: object 2 should be visible.
-3. `spatial_relation`: object 1 should satisfy the specified spatial relation with respect to object 2.
-
-Example constraints:
+Attributes:
 
 ```text
-The cup should be clearly visible.
-The book should be clearly visible.
-The cup should be to the left of the book in the 2D image.
+blue-and-white striped
+red-and-white striped
+black-and-white checkered
+yellow-and-green polka-dotted
+white speckled
+multicolored
 ```
 
-Spatial relations are judged from the viewer's perspective in the image plane:
+### 4.2 Material / Finish Attributes
 
-- left = left side of the image
-- right = right side of the image
-- above = higher in the image
-- below = lower in the image
-
----
-
-## 4. Combined-Constraint Prompt Grammar
-
-Combined prompts contain multiple atomic requirements in one prompt. They are used to test partial prompt adherence.
-
-### 4.1 Attribute + Spatial
-
-#### Template
+Allowed object groups:
 
 ```text
-{prefix} a {color_1} {object_1} {relation_text} a {color_2} {object_2} {scene_context}.
+small_items, containers
 ```
 
-#### Example
+Attributes:
 
 ```text
-A clean front-facing image of a red cup to the left of a blue book on a clean tabletop.
+reflective metallic
+transparent glass
+glossy white
+matte black
+plastic
+ceramic
 ```
 
-#### Expected Atomic Constraints
+The grammar uses attribute groups so that generated prompts are systematic rather than arbitrary. For example, `blue-and-white striped index card` is treated as a pattern/texture requirement, while `matte black die` is treated as a material/finish requirement.
+
+## 5. Spatial Relation Vocabulary
+
+Spatial relations are grouped by relation type and use object-group constraints to avoid unnatural combinations.
+
+| Relation key | Text            | Category    | Object 1 groups                   | Object 2 groups                   |
+| ------------ | --------------- | ----------- | --------------------------------- | --------------------------------- |
+| `left_of`    | to the left of  | lateral     | small_items, containers, surfaces | small_items, containers, surfaces |
+| `right_of`   | to the right of | lateral     | small_items, containers, surfaces | small_items, containers, surfaces |
+| `on_top_of`  | on top of       | support     | small_items                       | containers, surfaces              |
+| `under`      | under           | support     | surfaces                          | small_items                       |
+| `inside`     | inside          | containment | small_items                       | containers                        |
+| `outside`    | outside         | containment | small_items                       | containers                        |
+
+The final grammar uses physically meaningful relations such as `inside`, `on top of`, and `under`. Earlier pilot versions used more image-plane-style relations such as `above` and `below`, but those were harder to label consistently because a vertical image position does not always imply a physical spatial relation.
+
+## 6. Scene Contexts
+
+The grammar uses two scene context types.
+
+### 6.1 Simple Contexts
+
+Prefix:
 
 ```text
-The cup should be clearly visible.
-The book should be clearly visible.
-The cup should be red.
-The book should be blue.
-The cup should be to the left of the book in the 2D image.
+A clear image of
 ```
 
----
-
-### 4.2 Cardinality + Attribute
-
-#### Template
+Contexts:
 
 ```text
-{prefix} exactly {number} {color} {object_plural} {scene_context}.
+on a lightly cluttered tabletop
+on a plain desk with soft shadows
+on a clean surface with a few unrelated objects
 ```
 
-#### Example
+### 6.2 Natural Contexts
+
+Prefix:
 
 ```text
-A clean front-facing image of exactly three red cups on a clean tabletop.
+A realistic image of
 ```
 
-#### Expected Atomic Constraints
+Contexts:
 
 ```text
-The cup should be clearly visible.
-There should be exactly three visible cups.
-The cups should be red.
+on a cluttered desk with many office supplies
+on a crowded kitchen counter with utensils nearby
+on a picnic blanket with many small objects
+on a shelf full of books and decorations
+on a workbench with tools
+on a craft table with beads and art supplies
 ```
 
----
+Simple contexts reduce ambiguity. Natural contexts introduce more clutter and test whether the same constraints remain controllable and labelable in more realistic scenes.
 
-### 4.3 Cardinality + Spatial
+## 7. Prompt Families and Templates
 
-#### Template
+The final dataset contains 180 prompts across six prompt families. Prompt counts are balanced by family and assigned to T2I models using unpaired stratified assignment.
+
+| Prompt family                    | Count | Template                                                     |
+| -------------------------------- | ----: | ------------------------------------------------------------ |
+| `single_spatial`                 |    24 | `{prefix} a {object_1} {relation_text} a {object_2} {scene_context}.` |
+| `single_attribute`               |    24 | `{prefix} a {attribute_1} {object_1} and a {attribute_2} {object_2} {scene_context}.` |
+| `single_cardinality`             |    24 | `{prefix} exactly {number} {object_1_plural} {scene_context}.` |
+| `combined_spatial_attribute`     |    36 | `{prefix} a {attribute_1} {object_1} {relation_text} a {attribute_2} {object_2} {scene_context}.` |
+| `combined_spatial_cardinality`   |    36 | `{prefix} exactly {number} {object_1_plural} {relation_text} a {object_2} {scene_context}.` |
+| `combined_attribute_cardinality` |    36 | `{prefix} exactly {number} {attribute_1} {object_1_plural} and one {attribute_2} {object_2} {scene_context}.` |
+
+Example prompt:
 
 ```text
-{prefix} exactly {number} {object_1_plural} {relation_text} a {object_2} {scene_context}.
+A realistic image of exactly 4 dice inside a cup on a shelf full of books and decorations.
 ```
 
-#### Example
+## 8. Atomic Constraint Types
+
+Each generated prompt is decomposed into atomic constraints. These are the units used for human labeling, VLM checking, repair targeting, and metric aggregation.
+
+The final grammar uses four representative constraint types.
+
+| Constraint type    | Meaning                                                      | Example                                           |
+| ------------------ | ------------------------------------------------------------ | ------------------------------------------------- |
+| `object_identity`  | whether the requested object category is clearly present and recognizable | Does the image contain clearly identifiable dice? |
+| `cardinality`      | whether the requested number of target objects is visible and countable | Does the image contain exactly 4 dice?            |
+| `attribute`        | whether the requested object has the required pattern, texture, material, or finish | Does the image show a glossy white cup?           |
+| `spatial_relation` | whether two requested objects satisfy the requested relation | Are the dice inside the cup?                      |
+
+For the prompt:
 
 ```text
-A clean front-facing image of exactly three cups to the left of a book on a clean tabletop.
+A realistic image of exactly 4 dice inside a cup on a shelf full of books and decorations.
 ```
 
-#### Expected Atomic Constraints
+the generated constraints are:
+
+| Prompt element  | Constraint type    | Constraint                                              |
+| --------------- | ------------------ | ------------------------------------------------------- |
+| dice            | `object_identity`  | the image should contain clearly identifiable dice      |
+| cup             | `object_identity`  | the image should contain a clearly identifiable cup     |
+| exactly 4 dice  | `cardinality`      | the image should contain exactly 4 clearly visible dice |
+| dice inside cup | `spatial_relation` | the dice should be inside the cup                       |
+
+Attribute prompts generate analogous attribute constraints. For example, `a matte black die` becomes an `attribute` constraint checking whether the die has the requested material/finish.
+
+## 9. Label Semantics
+
+Each image-constraint pair receives one of three labels.
+
+| Label       | Meaning                                                      |
+| ----------- | ------------------------------------------------------------ |
+| `pass`      | the constraint is reasonably satisfied                       |
+| `fail`      | the constraint is clearly violated                           |
+| `ambiguous` | the image does not provide enough evidence to confidently decide pass or fail |
+
+The `ambiguous` label is intentionally broader than blur or occlusion. It also includes cases where the image contains an object-like shape whose identity or required property cannot be confidently determined.
+
+This is important for T2I outputs because models often produce plausible-looking shapes that are not clearly the requested object.
+
+## 10. VLM Checker Prompt Design
+
+The VLM checker receives one image and one atomic constraint at a time. It is asked to decide whether the image satisfies that single visual constraint.
+
+The checker prompt emphasizes:
+
+1. judge only one visual constraint,
+2. return `pass`, `fail`, or `ambiguous`,
+3. use `ambiguous` only when the relevant object, count, attribute, or relation cannot be confidently judged,
+4. prefer `pass` or `fail` when a reasonable human annotator could make a clear judgment.
+
+VLM labels are not treated as ground truth. They are used to test whether repair target selection can be automated. Human labels remain the final evaluation signal.
+
+## 11. Constraint-Aware Repair Rules
+
+Repair uses the same atomic constraint structure. A repaired prompt is constructed as:
 
 ```text
-The cup should be clearly visible.
-The book should be clearly visible.
-There should be exactly three visible cups.
-The cups should be to the left of the book in the 2D image.
+original prompt
++
+targeted repair instructions for failed/ambiguous constraints
 ```
 
----
+The repair instruction depends on the constraint type.
 
-### 4.4 Cardinality + Attribute + Spatial
+| Constraint type    | Repair focus                                                 | Example repair instruction                                   |
+| ------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `object_identity`  | make the requested object recognizable and avoid replacing it with a different category | Make sure the image clearly contains identifiable dice.      |
+| `cardinality`      | enforce the exact count and keep target objects separated and countable | Make sure there are exactly 4 dice; do not generate more or fewer, and keep them separated and countable. |
+| `attribute`        | apply the requested pattern, texture, material, or finish to the correct object | Make sure the cup has the glossy white material or surface finish. |
+| `spatial_relation` | make the requested relation visually clear                   | Make sure the dice are clearly inside the cup.               |
 
-#### Template
+For constraints labeled `ambiguous`, the repair instruction emphasizes clarity and easy judgment rather than only correcting a known failure. This reflects the fact that ambiguous cases are sometimes not clearly wrong; they may simply lack enough visual evidence.
+
+## 12. Generated Files
+
+Prompt generation produces three main files:
 
 ```text
-{prefix} exactly {number} {color_1} {object_1_plural} {relation_text} a {color_2} {object_2} {scene_context}.
+data/prompts/prompts.csv
+data/prompts/constraints.csv
+data/generations/generation_plan.csv
 ```
 
-#### Example
+`prompts.csv` contains prompt-level metadata such as:
 
 ```text
-A clean front-facing image of exactly three red cups to the left of a blue book on a clean tabletop.
+prompt_id
+prompt
+prompt_family
+scene_context_type
+scene_context
+composition
 ```
 
-#### Expected Atomic Constraints
+`constraints.csv` contains one row per atomic constraint, with fields such as:
 
 ```text
-The cup should be clearly visible.
-The book should be clearly visible.
-There should be exactly three visible cups.
-The cups should be red.
-The book should be blue.
-The cups should be to the left of the book in the 2D image.
+constraint_id
+prompt_id
+constraint_type
+check_text
+object_1
+object_2
+relation
+relation_text
+target_object
+target_count
+attribute
+attribute_category
+object_slot
+attribute_slot
 ```
 
-This combined case is more complex, so it may be used in smaller quantity than the simpler prompt families.
+`generation_plan.csv` assigns each prompt to a T2I provider/model using stratified assignment by prompt family.
 
----
+## 13. Design Notes
 
-## 5. Constraint Labeling Grammar
+The grammar was revised during the project based on pilot generations and human labeling.
 
-Labeling is performed at the atomic constraint level. The unit of labeling is:
+Important changes include:
 
-```text
-image_id × constraint_id
-```
+- replacing broad or ambiguous object names with more specific ones, such as `small flat washer` instead of `washer`;
+- using `index card` rather than the broader `card`;
+- separating attributes into `pattern_texture` and `material_finish`;
+- removing plain single-color attributes because they were too easy;
+- replacing image-plane spatial relations with more physically meaningful relations;
+- keeping relative object scale as a prompt wording concern rather than adding a separate constraint type.
 
-Labels are not assigned only at the whole-image level.
-
-### 5.1 Universal Labels
-
-All atomic constraints use the same three labels:
-
-- `pass`: the constraint is clearly satisfied.
-- `fail`: the constraint is clearly violated.
-- `ambiguous`: the constraint cannot be judged confidently because of unclear object identity, occlusion, overlap, image quality, or visual ambiguity.
-
-For combined prompts, prompt-level success is derived from atomic labels:
-
-```text
-full prompt success = all required atomic constraints are pass
-prompt failure = at least one required atomic constraint is fail
-prompt ambiguous = no fails, but at least one required atomic constraint is ambiguous
-```
-
----
-
-### 5.2 Object Existence Labeling
-
-#### Check
-
-```text
-The {object} should be clearly visible.
-```
-
-#### Pass
-
-The object is clearly visible and identifiable.
-
-#### Fail
-
-The object is clearly absent.
-
-#### Ambiguous
-
-The object may be present but is unclear, occluded, partially visible, or not confidently identifiable.
-
----
-
-### 5.3 Cardinality Labeling
-
-#### Check
-
-```text
-There should be exactly {number} visible {object_plural}.
-```
-
-#### Pass
-
-Exactly the requested number of target objects are clearly visible.
-
-#### Fail
-
-The number of clearly visible target objects is clearly different from the requested number.
-
-#### Ambiguous
-
-The target objects are partially occluded, merged, unclear, or not visually distinct enough to count confidently.
-
----
-
-### 5.4 Attribute Labeling
-
-#### Check
-
-```text
-The {object} should be {attribute}.
-```
-
-#### Pass
-
-The specified object is clearly visible and has the specified attribute.
-
-#### Fail
-
-The object is visible but does not have the specified attribute, or the attribute is clearly attached to the wrong object.
-
-#### Ambiguous
-
-The object or attribute is unclear because of lighting, occlusion, color ambiguity, or image quality.
-
----
-
-### 5.5 Spatial Relation Labeling
-
-#### Check
-
-```text
-The {object_1} should be {relation_text} the {object_2} in the 2D image.
-```
-
-#### Pass
-
-Both objects are clearly visible, and the specified spatial relation clearly holds in the 2D image plane.
-
-#### Fail
-
-Both objects are clearly visible, but the specified relation is clearly wrong, reversed, or not satisfied.
-
-#### Ambiguous
-
-Either object is unclear, missing, occluded, overlapping, or the viewpoint makes the spatial relation difficult to judge confidently.
-
-Spatial judgments use the viewer's image coordinate system.
-
----
-
-## 6. VLM Checker Prompt Grammar
-
-The VLM checker uses the same atomic constraints as the human labeling grammar. The difference is that the labeling rule is converted into an API prompt.
-
-The checker should be given one image and one atomic constraint at a time. The checker output should be parsed and written to `vlm_labels.csv`.
-
-### 6.1 Universal VLM Checker Instruction
-
-```text
-You are a visual constraint checker.
-
-Your task is to judge whether the image satisfies ONE visual constraint.
-
-Return exactly one label:
-- pass
-- fail
-- ambiguous
-
-Use "pass" only if the constraint is clearly satisfied.
-Use "fail" if the constraint is clearly violated.
-Use "ambiguous" if the image is unclear, objects are occluded, object identity is uncertain, or the constraint cannot be confidently judged.
-
-Return ONLY valid JSON in the following format:
-{
-  "label": "pass" | "fail" | "ambiguous",
-  "reason": "one short sentence"
-}
-```
-
-### 6.2 Object Existence Checker
-
-```text
-Constraint type: object existence
-Constraint: A {object} should be clearly visible in the image.
-
-Decision rules:
-- Return "pass" if the object is clearly visible.
-- Return "fail" if the object is clearly absent.
-- Return "ambiguous" if the object may be present but is unclear, occluded, or not confidently identifiable.
-```
-
-### 6.3 Cardinality Checker
-
-```text
-Constraint type: object cardinality
-Constraint: There should be exactly {number} clearly visible {object_plural}.
-
-Decision rules:
-- Return "pass" if exactly {number} clearly identifiable {object_plural} are visible.
-- Return "fail" if the number of clearly visible {object_plural} is clearly different from {number}.
-- Return "ambiguous" if the objects are unclear, occluded, partially visible, or cannot be counted confidently.
-- Count only clearly visible instances of the target object.
-```
-
-### 6.4 Attribute Checker
-
-```text
-Constraint type: object attribute
-Constraint: The {object} should be {attribute}.
-
-Decision rules:
-- Return "pass" if the specified object is clearly visible and has the specified attribute.
-- Return "fail" if the object is clearly visible but does not have the specified attribute, or if the attribute is clearly attached to the wrong object.
-- Return "ambiguous" if the object or attribute is unclear because of lighting, occlusion, or image quality.
-```
-
-### 6.5 Spatial Relation Checker
-
-```text
-Constraint type: spatial relation
-Constraint: The {object_1} should be {relation_text} the {object_2}.
-
-Decision rules:
-- Use the 2D image coordinate system from the viewer's perspective.
-- "left" means the left side of the image.
-- "right" means the right side of the image.
-- "above" means higher in the image.
-- "below" means lower in the image.
-- Return "pass" if both objects are clearly visible and the relation clearly holds.
-- Return "fail" if both objects are clearly visible and the relation is clearly violated.
-- Return "ambiguous" if either object is unclear, missing, occluded, overlapping, or the relation cannot be confidently judged.
-```
-
----
-
-## 7. Repair Grammar
-
-The repair grammar is designed around one principle:
-
-```text
-constraint-level failure triggers repair,
-image-level prompt is reconstructed for repair,
-both constraint-level and image-level repair success are evaluated.
-```
-
-A failed atomic constraint is used to diagnose what went wrong, but the repaired prompt is generated at the image level. The repaired prompt should preserve all original requirements while strengthening failed or ambiguous constraints.
-
-### 7.1 Repair Trigger Labels
-
-The grammar distinguishes between `fail` and `ambiguous` cases.
-
-#### Fail: Corrective Repair
-
-A `fail` label means the constraint is clearly violated. Repair should use a **corrective rewrite** that explicitly states what must be true and, when useful, what should be avoided.
-
-Example:
-
-```text
-The cup must be clearly to the left of the book in the 2D image. Keep the two objects separated so the relation is easy to verify.
-```
-
-#### Ambiguous: Clarification Repair
-
-An `ambiguous` label means the image does not provide enough visual evidence to confidently mark the constraint as pass or fail. Repair should use a **clarification rewrite** that improves visibility, separability, or judgeability.
-
-Example:
-
-```text
-Make the cup and the book clearly visible, separated, and not overlapping. Use a front-facing layout so the spatial relation is easy to judge.
-```
-
-For Checkpoint 2, the repair pilot uses `fail` as the trigger label. The grammar defines ambiguous repair as well, but ambiguous-triggered repair is left as a final-report extension.
-
----
-
-### 7.2 Repair Strategy
-
-The code supports two repair strategies.
-
-#### `repair_all_failed`
-
-One repaired prompt is generated for each failed image. All failed constraints in that image are strengthened together.
-
-This strategy is image-level: it asks whether repairing all diagnosed failures can make the whole generated image satisfy all original constraints.
-
-#### `repair_single_target`
-
-One repaired prompt is generated for each target failed constraint. If a source image has multiple failed constraints, each failed constraint can produce its own repaired prompt.
-
-This strategy supports a more detailed final analysis of repair difficulty by constraint type.
-
-Checkpoint 2 uses `repair_all_failed` by default, while keeping `repair_single_target` available in the code.
-
----
-
-### 7.3 Repaired Prompt Construction
-
-The repaired prompt is not created by pasting the original prompt and adding a vague instruction such as "fix the image." Instead, it is reconstructed from the original constraint metadata:
-
-```text
-same original constraint set
-+ strengthened failed constraints
-+ clarity / anti-regression instructions
-```
-
-The format is:
-
-```text
-Create a clear image satisfying all of the following visual requirements:
-1. <requirement from original constraint 1>
-2. <requirement from original constraint 2>
-3. <strengthened instruction for failed constraint>
-...
-
-Composition guidelines:
-- Use a clear, front-facing composition.
-- Keep all relevant objects visible and separated.
-- Avoid occlusion, heavy overlap, cropped objects, or ambiguous object shapes.
-- Do not introduce extra objects that could be confused with the requested objects.
-```
-
-This makes the repair prompt comparable to the original prompt: both come from the same underlying constraint set, but the repair prompt expresses the constraints in a more explicit and structured way.
-
----
-
-### 7.4 Constraint-Type-Specific Repair Rules
-
-#### Object Existence
-
-Fail repair:
-
-```text
-The <object> must be clearly visible as a distinct object in the image. Do not omit it.
-```
-
-Ambiguous repair:
-
-```text
-Make <object> clearly visible as a distinct, unobstructed object. Avoid cropping, overlap, or ambiguous shapes.
-```
-
-#### Cardinality
-
-Fail repair:
-
-```text
-There must be exactly <N> clearly visible <object_plural> total. Do not include extra <object_plural>, and do not hide or merge any of them.
-```
-
-Ambiguous repair:
-
-```text
-Make exactly <N> clearly separated <object_plural> visible. Avoid overlap or partial objects that make counting uncertain.
-```
-
-#### Attribute Binding
-
-Fail repair:
-
-```text
-The <object> must clearly have the <attribute> attribute. Do not apply this attribute to the wrong object.
-```
-
-Ambiguous repair:
-
-```text
-Make the <attribute> attribute of <object> visually clear and unambiguous. Avoid lighting or occlusion that makes the attribute hard to judge.
-```
-
-#### Spatial Relation
-
-Fail repair:
-
-```text
-The <object_1> must be clearly <relation_text> the <object_2> in the 2D image. Keep the two objects separated so the relation is easy to verify.
-```
-
-Ambiguous repair:
-
-```text
-Make the spatial relation unambiguous: <object_1> is clearly <relation_text> <object_2>. Use a front-facing layout with separated objects and no overlap.
-```
-
-Relation-specific layout guidance can be used when available:
-
-```text
-left_of:
-  object_1 → left side of the image
-  object_2 → right side of the image
-
-right_of:
-  object_1 → right side of the image
-  object_2 → left side of the image
-
-above:
-  object_1 → upper part of the image
-  object_2 → lower part of the image
-
-below:
-  object_1 → lower part of the image
-  object_2 → upper part of the image
-```
-
----
-
-### 7.5 Combined-Constraint Repair
-
-For combined prompts, repair is still generated at the image level.
-
-The repaired prompt should:
-
-1. Preserve all original constraints.
-2. Strengthen the failed or ambiguous constraints.
-3. Add clarity and anti-regression guidance.
-
-Example:
-
-```text
-Create a clear image satisfying all of the following visual requirements:
-1. The cup is clearly visible.
-2. The book is clearly visible.
-3. The cup is red.
-4. The book is blue.
-5. The cup must be clearly to the left of the book in the 2D image.
-
-Composition guidelines:
-- Use a clear, front-facing composition.
-- Keep the cup and book separated and not overlapping.
-- Do not swap the colors.
-- Do not introduce extra confusing objects.
-```
-
----
-
-### 7.6 Repair Output Tables
-
-Repair uses two linked tables.
-
-#### `repaired_prompts_checkpoint2.csv`
-
-One row per repair attempt:
-
-```text
-repair_id
-source_image_id
-source_prompt_id
-repair_strategy
-trigger_label_source
-trigger_labels
-num_target_constraints
-target_constraint_ids
-original_prompt
-repaired_prompt
-```
-
-This table represents image-level repair attempts.
-
-#### `repair_targets_checkpoint2.csv`
-
-One row per target constraint:
-
-```text
-repair_id
-source_image_id
-source_prompt_id
-target_constraint_id
-target_constraint_type
-before_label
-repair_action
-target_constraint_text
-```
-
-This table makes it possible to analyze repair success by constraint type.
-
----
-
-### 7.7 Repair Evaluation
-
-Repair is evaluated at four levels:
-
-1. **Target-constraint repair success:** whether the targeted failed constraint becomes `pass` after repair.
-2. **Image-level repair success:** whether the repaired image satisfies all original constraints.
-3. **Regression analysis:** whether repair introduces new failures among constraints that previously passed.
-4. **Repair success by constraint type:** whether some constraint types are easier or harder to repair.
-
-The main repair metrics are:
-
-```text
-target_fixed_rate
-image_fixed_rate
-regression_rate
-target_fixed_rate_by_constraint_type
-```
-
----
-
-## 8. Expected Files Produced by the Grammar Pipeline
-
-The grammar design supports the following files:
-
-```text
-prompts.csv        # prompt-level information
-constraints.csv    # expected atomic constraints for each prompt
-generations.csv    # generated image metadata
-human_labels.csv   # human labels for image × constraint pairs
-vlm_labels.csv     # VLM checker labels for image × constraint pairs
-```
-
-For repair experiments, it also supports:
-
-```text
-repaired_prompts_checkpoint2.csv
-repair_targets_checkpoint2.csv
-repaired_generations_checkpoint2.csv
-repaired_human_labels_checkpoint2.csv
-repair_target_results.csv
-repair_image_results.csv
-repair_success_by_constraint_type.csv
-repair_summary_metrics.csv
-```
-
-The grammar itself is stored in two forms:
-
-```text
-docs/grammar.md              # human-readable design document
-configs/grammar_config.yaml  # machine-readable config for scripts
-```
+The final grammar is therefore not only a prompt generator. It is the shared representation that makes prompt-following failures measurable, repairable, and analyzable.

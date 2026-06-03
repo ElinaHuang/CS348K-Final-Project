@@ -1,199 +1,292 @@
 # Constraint-Level Evaluation and Repair for Text-to-Image Prompt Following
 
-**CS348K Final Project Proposal**
+**CS348K Final Project**
 
-**Student:** Yiling Huang 
+**Student:** Yiling Huang
 
-**SUNET ID:** yilhuang
+**SUNet ID:** yilhuang
 
 ## Summary
 
-This project builds a grammar-driven diagnose-and-repair pipeline for prompt adherence in text-to-image generation, focusing on structured visual constraints such as object cardinality, attribute binding, and spatial layout. The core system will synthesize controlled prompts across simple and natural scene contexts, including both single-constraint and combined-constraint prompts, then evaluate generated images using human labels and a VLM-based constraint checker. By the end of the project, I will report constraint-level failure rates, VLM-human agreement, and a small-scale before/after analysis of whether constraint-aware prompt rewrites repair failed requirements without introducing regressions.
+Text-to-image (T2I) models often generate images that look plausible overall while still failing specific parts of a prompt, such as object identity, exact count, object attributes, or spatial relations. This project studies whether decomposing T2I prompts into atomic visual constraints can make these partial prompt-following failures measurable, repairable, and scalable with VLM-assisted checking.
 
-## Checkpoint 1
-
-Checkpoint 1 focuses on concretizing the evaluation pipeline. The current version includes grammar-based prompt/constraint generation, mock image generations, human/VLM label schemas, constraint-level checker metrics, image-level checker metrics, and image-level controllability metrics.
-
-The Checkpoint 1 data is archived under:
+The project implements an end-to-end constraint-level workflow:
 
 ```text
-data/checkpoint1/
+controlled grammar
+→ prompts + atomic constraints
+→ T2I image generation
+→ human labels + VLM checker labels
+→ targeted repair prompts
+→ repaired images
+→ before/after evaluation
 ```
 
-See [`docs/checkpoint1/checkpoint1_README.md`](docs/checkpoint1/checkpoint1_README.md) for the full checkpoint report.
+The main result is positive: constraint-aware repair improves both image-level and constraint-level pass rates under human evaluation. Human-triggered repair improves image pass rate by **51.9%**, while VLM-triggered repair improves image pass rate by **28.0%**. These results support the main claim that constraint-level structure is a useful systems abstraction for making partial T2I prompt-following failures measurable, actionable, and analyzable.
 
-## Current Status: Checkpoint 2
+## Final Deliverables
 
-Checkpoint 2 moves the project from mock data to a small real-data pilot. The current submission includes:
+- [Final report](docs/final_report/final_report.md)
+- [Final presentation slides](docs/final_report/Presentation_Slides.pdf)
+- [Grammar design document](docs/grammar.md)
+- [Final grammar config](configs/grammar_config.yaml)
+- [Final experiment config](configs/final_experiment_config.yaml)
+- [Final result CSVs](results/final/)
 
-- real T2I generations using the OpenAI image API
-- human labels on a selected subset of generated images
-- VLM checker outputs on the same labeled subset
-- constraint-level and image-level evaluation results
-- a repair pipeline that converts failed constraints into structured repair prompts
-- a small repair pilot with before/after human labels
+Older proposal and checkpoint materials are kept under `docs/proposal/`, `docs/checkpoint1/`, and `docs/checkpoint2/` for project history.
 
-See [`docs/checkpoint2/checkpoint2_README.md`](docs/checkpoint2/checkpoint2_README.md) for the Checkpoint 2 report.
+## Project Scope
 
-## Evaluation Overview
+The grammar is not intended to cover every possible user prompt. Instead, it creates a controlled testbed where prompt requirements can be systematically generated, labeled, repaired, and analyzed.
 
-The evaluation has three levels.
+The final grammar covers six prompt families:
 
-### 1. Constraint-level checker evaluation
+- `single_spatial`
+- `single_attribute`
+- `single_cardinality`
+- `combined_spatial_attribute`
+- `combined_spatial_cardinality`
+- `combined_attribute_cardinality`
 
-Each generated image is decomposed into atomic visual constraints, such as:
+It uses four representative atomic constraint types:
 
-- `object_existence`
+- `object_identity`
 - `cardinality`
 - `attribute`
 - `spatial_relation`
 
-The unit of analysis is one `image × constraint` pair. This level evaluates whether the VLM checker agrees with human labels on each atomic requirement. It is mainly used for diagnosis and for identifying failed constraints that can later drive repair.
+The purpose of this setup is to test whether partial prompt-following failures can be localized and used as actionable repair signals.
 
-### 2. Image-level checker evaluation
+## Final Experiment Overview
 
-Atomic constraint labels are aggregated into one image-level judgment:
+| Component           | Setting                                               |
+| ------------------- | ----------------------------------------------------- |
+| Prompts             | 180                                                   |
+| Atomic constraints  | 720                                                   |
+| T2I models          | OpenAI `gpt-image-1`, Google `gemini-2.5-flash-image` |
+| VLM checker         | GPT-4.1                                               |
+| Labels              | `pass`, `fail`, `ambiguous`                           |
+| Repair triggers     | human-triggered, VLM-triggered, combined              |
+| Scene context types | `simple`, `natural`                                   |
 
-```text
-all atomic constraints pass        → image-level pass
-any atomic constraint fails        → image-level fail
-no failures, but some ambiguous    → image-level ambiguous
-```
+### Initial Generation
 
-This level evaluates whether the VLM checker can correctly judge whether a whole generated image satisfies the prompt.
+| Level      | Human pass | Human fail | Human ambiguous |
+| ---------- | ---------: | ---------: | --------------: |
+| Image      |      55.0% |      33.3% |           11.7% |
+| Constraint |      85.8% |       9.4% |            4.7% |
 
-### 3. Image-level controllability evaluation
+The gap between image-level and constraint-level pass rates shows that many images are partial failures rather than total failures. Constraint-level evaluation reveals which specific requirement failed.
 
-This is the main project-level evaluation. It measures how well the T2I generator follows prompts under different prompt conditions, including:
+### VLM-Human Agreement
 
-- `prompt_family`
-- `scene_context_type`
-- `composition`
-- `scene_context_type × composition`
-- `prompt_family × scene_context_type × composition`
+| Level      | Agreement | Non-pass precision | Non-pass recall | Non-pass F1 |
+| ---------- | --------: | -----------------: | --------------: | ----------: |
+| Image      |     69.4% |              72.0% |           82.7% |       77.0% |
+| Constraint |     80.4% |              42.9% |           71.6% |       53.7% |
 
-The main metrics are human-labeled image-level pass, fail, and ambiguous rates.
+The VLM checker is useful as an automatic repair trigger, but human labels remain the final evaluation ground truth.
 
-For Checkpoint 2, the quantitative pilot is intentionally small, so these numbers are treated as preliminary rather than final conclusions.
+### Repair Results
 
-### 4. Repair evaluation
+| Trigger source  | Attempts | Constraint pass Δ | Image pass Δ | Image fixed rate | Regression rate |
+| --------------- | -------: | ----------------: | -----------: | ---------------: | --------------: |
+| Human-triggered |       81 |         +16.7 pts |    +51.9 pts |            51.9% |           11.1% |
+| VLM-triggered   |       93 |          +9.7 pts |    +28.0 pts |            34.4% |           15.1% |
+| Combined        |      174 |         +12.9 pts |    +39.1 pts |            42.5% |           13.2% |
 
-Repair is triggered by failed atomic constraints, but organized as image-level prompt reconstruction. The repair analysis measures:
-
-- `target-constraint fixed rate`
-- `image-level fixed rate`
-- `regression rate`
-- `repair success by constraint type`
-
-## Project Documents
-
-- [Project proposal](docs/proposal/proposal.md)
-- [Grammar design](docs/grammar.md)
-- [Checkpoint 1 report](docs/checkpoint1/checkpoint1_README.md)
-- [Checkpoint 2 report](docs/checkpoint2/checkpoint2_README.md)
+The repair results show that the same constraint grammar used for checking can also turn failed or ambiguous constraints into useful targeted repair instructions.
 
 ## Repository Structure
 
 ```text
-configs/        machine-readable grammar/config files
-docs/           human-readable project documents
-scripts/        pipeline scripts
-data/           prompts, constraints, mock images, labels
-results/        generated evaluation results
-tests/          unit tests
+configs/
+  grammar_config.yaml              # final grammar and dataset specification
+  final_experiment_config.yaml     # paths and stage configuration
+
+scripts/
+  generate_prompts.py              # grammar → prompts, constraints, generation plan
+  generate_images.py               # T2I API image generation
+  create_human_label_template.py   # label template for initial generations
+  run_vlm_checker.py               # VLM checking for image-constraint pairs
+  analyze_checker.py               # initial generation + VLM agreement analysis
+  generate_repair_prompts.py       # failed constraints → repaired prompts
+  create_repair_label_template.py  # label template for repaired images
+  analyze_repair.py                # before/after repair analysis
+  run_final_experiment.py          # staged final experiment runner
+  utils.py                         # shared CSV, parsing, and label utilities
+
+data/
+  prompts/                         # prompts.csv, constraints.csv
+  generations/                     # generation plan and generation metadata
+  images/                          # generated initial images
+  labels/                          # human and VLM labels
+  repaired/                        # repaired prompts, generations, labels, images
+
+results/
+  final/                           # final evaluation and repair result CSVs
+
+docs/
+  grammar.md                       # human-readable grammar design
+  final_report/                    # final report, slides, and report figures
+  checkpoint1/, checkpoint2/       # archived checkpoint materials
+
+tests/
+  pytest tests for prompt generation, VLM prompts, retry logic,
+  repair prompt generation, and analysis metrics
 ```
 
-## Data Organization
+## Setup
 
-Checkpoint 1 mock/easy data is archived in:
-
-```text
-data/checkpoint1/
-```
-
-The current active project data uses the default data folders:
-
-```text
-data/prompts/
-data/generations/
-data/images/
-data/labels/
-data/repaired/
-```
-
-Checkpoint 2 selected prompt subsets and labels use checkpoint-specific filenames, for example:
-
-```text
-data/prompts/prompts_checkpoint2.csv
-data/prompts/constraints_checkpoint2.csv
-data/generations/generations_checkpoint2.csv
-data/labels/human_labels_checkpoint2.csv
-data/labels/vlm_labels_checkpoint2.csv
-```
-
-Generated image files are stored under:
-
-```text
-data/images/openai_checkpoint2/
-```
-
-Results are organized by checkpoint:
-
-```text
-results/checkpoint1/
-results/checkpoint2/
-```
-
-## How to Run
-
-### Checkpoint 1
-
-From the repository root, run:
+Install dependencies:
 
 ```bash
-python scripts/run_checkpoint1.py
+pip install -r requirements.txt
 ```
 
-The main outputs are written to:
+For API-backed generation/checking, create a `.env` file or export the required API keys for the providers you use. The scripts load environment variables through `python-dotenv`.
 
-```text
-results/checkpoint1/
-```
-
-### Checkpoint 2
-
-Checkpoint 2 uses staged commands because some steps require API calls or manual human labeling.
-
-From the `scripts/` directory:
+Typical variables:
 
 ```bash
-python run_checkpoint2.py --select-prompts
-python run_checkpoint2.py --generate-images
-python run_checkpoint2.py --create-human-template
-python run_checkpoint2.py --run-vlm
-python run_checkpoint2.py --analyze
-python run_checkpoint2.py --generate-repairs
-python run_checkpoint2.py --generate-repair-images
-python run_checkpoint2.py --create-repair-label-template
-python run_checkpoint2.py --analyze-repair
+OPENAI_API_KEY=...
+GOOGLE_API_KEY=...
 ```
 
-The main outputs are written to:
+You can use `--dry-run` for image generation or VLM checking stages when testing the pipeline without making API calls.
+
+## Running the Final Experiment
+
+The final experiment is staged because some steps require API calls and manual human labeling.
+
+Run commands from the `scripts/` directory:
+
+```bash
+cd scripts
+```
+
+### 1. Generate prompts and constraints
+
+```bash
+python run_final_experiment.py --stage generate-prompts
+```
+
+Outputs:
 
 ```text
-results/checkpoint2/
+data/prompts/prompts.csv
+data/prompts/constraints.csv
+data/generations/generation_plan.csv
+```
+
+### 2. Generate initial images
+
+```bash
+python run_final_experiment.py --stage generate-images
+```
+
+For a no-API test run:
+
+```bash
+python run_final_experiment.py --stage generate-images --dry-run
+```
+
+### 3. Create human label template
+
+```bash
+python run_final_experiment.py --stage create-human-template
+```
+
+Fill in `data/labels/human_labels.csv` manually.
+
+### 4. Run VLM checker
+
+```bash
+python run_final_experiment.py --stage run-vlm
+```
+
+For a no-API test run:
+
+```bash
+python run_final_experiment.py --stage run-vlm --dry-run
+```
+
+### 5. Analyze initial generation and VLM agreement
+
+```bash
+python run_final_experiment.py --stage analyze-initial
+```
+
+Outputs are written to:
+
+```text
+results/final/
+```
+
+### 6. Generate repair prompts
+
+```bash
+python run_final_experiment.py --stage generate-repairs-human
+python run_final_experiment.py --stage generate-repairs-vlm
+```
+
+### 7. Generate repaired images
+
+```bash
+python run_final_experiment.py --stage generate-repair-images-human
+python run_final_experiment.py --stage generate-repair-images-vlm
+```
+
+### 8. Create repaired-image label templates
+
+```bash
+python run_final_experiment.py --stage create-repair-label-template-human
+python run_final_experiment.py --stage create-repair-label-template-vlm
+```
+
+Fill in the repaired-image human labels manually.
+
+### 9. Analyze repair
+
+```bash
+python run_final_experiment.py --stage analyze-repair-human
+python run_final_experiment.py --stage analyze-repair-vlm
+python run_final_experiment.py --stage analyze-repair-combined
 ```
 
 ## Tests
 
-From the repository, run:
+Run all tests from the repository root:
 
 ```bash
 pytest tests
 ```
 
-The tests cover prompt generation, VLM response parsing, evaluation metrics, and repair logic.
+The tests cover:
 
-## Notes
+- final prompt and constraint generation
+- VLM checker prompt construction
+- VLM retry logic
+- repair prompt generation
+- initial analysis metrics
+- repair analysis metrics
 
-The current Checkpoint 2 results are a small real-data pilot rather than the final experiment. Human labeling revealed that cardinality and attribute/material constraints already produce meaningful pass/fail/ambiguous cases, while the current spatial grammar still needs revision. In the next iteration, the spatial grammar will be updated to use more physically meaningful relations before rerunning the broader generation and repair experiment.
+## Notes on Labels
+
+Labels use three values:
+
+- `pass`: the visual requirement is reasonably satisfied.
+- `fail`: the visual requirement is clearly violated.
+- `ambiguous`: the image does not provide enough evidence to confidently decide pass or fail.
+
+In this project, `ambiguous` includes not only blur, occlusion, or small objects, but also generated object-like shapes whose identity or required property cannot be confidently determined.
+
+## Project History
+
+The repository also contains earlier project stages:
+
+- `docs/proposal/`: original proposal.
+- `docs/checkpoint1/`: mock-data/checker pipeline checkpoint.
+- `docs/checkpoint2/`: real-data pilot checkpoint.
+
+The final experiment supersedes the checkpoint results and uses the final grammar in `configs/grammar_config.yaml`.
