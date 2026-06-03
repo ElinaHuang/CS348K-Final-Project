@@ -72,7 +72,7 @@ The key abstraction in this project is one shared grammar. The grammar does not 
 
 This design is important because partial prompt-following failures are only useful if they can be localized. For example, if an image generated from the prompt “exactly 4 dice inside a cup” contains dice and a cup, but generates the wrong number of dice, the system should not only say that the whole image failed. It should be able to identify that the object identity and spatial relation were satisfied, while the cardinality requirement failed.
 
-<img src="./assets/figure2_approach_pipeline.png" width="95%">
+<img src="./assets/figure2_approach_pipeline.png" width="90%">
 
 **Figure 2. Example of the shared grammar.**
 
@@ -206,7 +206,7 @@ This section evaluates whether the proposed constraint-level workflow makes part
 
 The experiment follows the full generate-check-repair-evaluate workflow shown below.
 
-<img src="./assets/figure4_experiment_workflow.png" width="95%">
+<img src="./assets/figure4_experiment_workflow.png" width="90%">
 
 **Figure 4. Experimental workflow.**
 
@@ -396,9 +396,9 @@ Table 2 shows representative qualitative repair outcomes.
 
 | Case                          | Prompt                                                       | Before                                                       | After                                                        |
 | ----------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Successful repair             | A realistic image of exactly **4 dice** inside a cup on a shelf full of books and decorations. | **Ground truth: fail<br />**4 dice - Human fail<img src="./assets/figure1_dice_cup_count_failure.png" width="90%"> | **Ground truth: pass<br />**4 dice - Human pass<img src="./assets/figure7_success_repair.png" width="100%"> |
-| VLM false-positive regression | A realistic image of exactly **3 matte black dice** and one **yellow-and-green polka-dotted** index card on a shelf full of books and decorations. | **Ground truth: pass<br />**3 dice - Human pass, VLM pass;<br />yellow-and-green polka-dotted - Human pass, VLM **fail**<img src="./assets/figure6_green_yellow_card_before.png" width="90%"> | **Ground truth: fail<br />**3 dice - Human **fail**;<br />yellow-and-green polka-dotted - Human pass<img src="./assets/figure8_regression_vlm.png" width="90%"> |
-| Target fixed, count regressed | A realistic image of exactly **5 standard safety pins** to the **left** of a napkin on a shelf full of books and decorations. | **Ground truth: fail<br />**5 pins - Human pass;<br />to the left - Human **fail**<img src="./assets/figure9_regression_human_before.png" width="90%"> | **Ground truth: fail<br />**5 pins - Human **fail**;<br />to the left - Human pass<img src="./assets/figure10_regression_human_after.png" width="90%"> |
+| Successful repair             | A realistic image of exactly **4 dice** inside a cup on a shelf full of books and decorations. | **Ground truth: fail**<br />4 dice - Human fail<img src="./assets/figure1_dice_cup_count_failure.png" width="90%"> | **Ground truth: pass**<br />4 dice - Human pass<img src="./assets/figure7_success_repair.png" width="100%"> |
+| VLM false-positive regression | A realistic image of exactly **3 matte black dice** and one **yellow-and-green polka-dotted** index card on a shelf full of books and decorations. | **Ground truth: pass**<br />3 dice - Human pass, VLM pass;<br />yellow-and-green polka-dotted - Human pass, VLM **fail**<img src="./assets/figure6_green_yellow_card_before.png" width="90%"> | **Ground truth: fail**<br />3 dice - Human **fail**;<br />yellow-and-green polka-dotted - Human pass<img src="./assets/figure8_regression_vlm.png" width="90%"> |
+| Target fixed, count regressed | A realistic image of exactly **5 standard safety pins** to the **left** of a napkin on a shelf full of books and decorations. | **Ground truth: fail**<br />5 pins - Human pass;<br />to the left - Human **fail**<img src="./assets/figure9_regression_human_before.png" width="90%"> | **Ground truth: fail**<br />5 pins - Human **fail**;<br />to the left - Human pass<img src="./assets/figure10_regression_human_after.png" width="90%"> |
 
 **Table 2. Qualitative examples of repair outcomes.** Constraint-aware repair can fix targeted failures, but it can also introduce regressions. The examples show one successful repair, one VLM false-positive repair that creates a new count error, and one tradeoff case where the target spatial relation is fixed but cardinality regresses.
 
@@ -412,11 +412,19 @@ I also analyzed repair results by prompt family, T2I model, and scene context. T
 
 ## 4. Discussion and Takeaways
 
+The results support the central claim that constraint-level structure is a useful systems abstraction for T2I prompt following. The grammar makes partial failures measurable, turns failed constraints into targeted repair instructions, and supports before/after evaluation. The main contribution is not a single best prompt-repair heuristic, but a stable generate-check-repair-evaluate workflow built around visual constraints.
 
+The results also show that prompt-following difficulty is not uniform. Combined prompts are harder than single-constraint prompts, and cardinality is much harder than attribute or spatial relation constraints. This is exactly the kind of diagnosis that image-level evaluation alone would hide. Constraint-level analysis is useful because it shows not only whether repair works, but where it works and where it still struggles.
+
+VLM checking is promising as a scalable repair trigger, but it is not reliable enough to replace human evaluation. The VLM catches many human-labeled non-pass cases, but it also over-flags constraints, especially at the constraint level. This explains why VLM-triggered repair improves correctness but has a higher regression rate than human-triggered repair.
+
+These results suggest two natural extensions. First, physical plausibility and relative object scale could be added as explicit constraints, since pilot generations sometimes produced correct objects with unrealistic relative sizes. Second, the VLM checker could be calibrated more carefully so that it still catches useful repair targets while reducing unnecessary false-positive repairs.
+
+Overall, the main takeaway is that constraint-level structure is useful not only because it improves one overall score, but because it makes failures actionable and analyzable. It tells us what failed, what repair helped, and which parts of T2I prompt following remain difficult.
 
 ## 5. Team Responsibilities
 
-
+This was an individual project. I designed the constraint grammar, implemented the prompt generation, T2I image generation, VLM checking, repair prompt generation, labeling template generation, and result analysis pipeline. I also generated the dataset, performed the human annotation, analyzed the results, prepared the final presentation, and wrote the final report.
 
 ## 6. References
 
