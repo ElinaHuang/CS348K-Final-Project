@@ -72,7 +72,7 @@ The key abstraction in this project is one shared grammar. The grammar does not 
 
 This design is important because partial prompt-following failures are only useful if they can be localized. For example, if an image generated from the prompt “exactly 4 dice inside a cup” contains dice and a cup, but generates the wrong number of dice, the system should not only say that the whole image failed. It should be able to identify that the object identity and spatial relation were satisfied, while the cardinality requirement failed.
 
-<img src="./assets/figure2_approach_pipeline.png" width="100%">
+<img src="./assets/figure2_approach_pipeline.png" width="85%">
 
 **Figure 2.** Example of the shared grammar.
 
@@ -115,7 +115,7 @@ The main grammar components are summarized below.
 | Spatial relations | left/right, on top of/under, inside/outside                  | Uses relations that are natural and labelable                |
 | Numbers           | 3, 4, 5, 6                                                   | Tests exact cardinality control                              |
 
-The full grammar configuration is stored in [grammar_configs.yaml](../configs/grammar_config.yaml), with additional design notes in [grammar.md](../docs/grammar.md). In the writeup, I focus on the design choices and the resulting evaluation rather than listing every grammar template.
+The full grammar configuration is stored in [grammar_configs.yaml](../../configs/grammar_config.yaml), with additional design notes in [grammar.md](../grammar.md). In the writeup, I focus on the design choices and the resulting evaluation rather than listing every grammar template.
 
 ### 2.3 From Prompt Instances to Atomic Constraints
 
