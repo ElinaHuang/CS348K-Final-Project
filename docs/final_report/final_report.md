@@ -22,9 +22,9 @@ For example, consider a prompt such as:
 
 > A realistic image of exactly 4 dice inside a cup on a shelf full of books and decorations.
 
-<img src="./assets/figure1_dice_cup_count_failure.png" width="50%">
+<img src="./assets/figure1_dice_cup_count_failure.png" width="45%">
 
-**Figure 1**. Example of a partial prompt-following failure. The image satisfies the object and spatial requirements, since dice and a cup are visible and the dice are inside the cup. However, it violates the cardinality requirement because the prompt asks for exactly 4 dice while the image contains 5 dice.
+**Figure 1.** Example of a partial prompt-following failure. The image satisfies the object and spatial requirements, since dice and a cup are visible and the dice are inside the cup. However, it violates the cardinality requirement because the prompt asks for exactly 4 dice while the image contains 5 dice.
 
 This type of partial prompt-following failure is difficult to capture with only image-level evaluation. If I label the entire image as failed, I lose information about which parts of the prompt were actually satisfied. If I only judge whether the image looks realistic, I may miss the prompt-following error entirely. Therefore, this project focuses on evaluating and improving T2I outputs at the level of **individual visual requirements**, not only at the level of the whole image.
 
@@ -66,7 +66,137 @@ Given this problem setting, I designed a constraint-level grammar as the central
 
 ## 2. Approach
 
+### 2.1 A Shared Grammar for Generation, Checking, Repair, and Evaluation
 
+The key abstraction in this project is one shared grammar. The grammar does not only generate the original text prompt. It also defines the atomic visual constraints implied by that prompt, and these constraints are then reused for labeling, repair, and evaluation.
+
+This design is important because partial prompt-following failures are only useful if they can be localized. For example, if an image generated from the prompt “exactly 4 dice inside a cup” contains dice and a cup, but generates the wrong number of dice, the system should not only say that the whole image failed. It should be able to identify that the object identity and spatial relation were satisfied, while the cardinality requirement failed.
+
+<img src="./assets/figure2_approach_pipeline.png" width="100%">
+
+**Figure 2.** Example of the shared grammar.
+
+The grammar is therefore used as a shared representation across the project:
+
+1. It generates controlled prompts.
+2. It decomposes each prompt into atomic constraints.
+3. It provides the units that humans and VLMs label.
+4. It converts failed or ambiguous constraints into targeted repair instructions.
+5. It defines the metrics used to analyze initial generation and repair results.
+
+In other words, the grammar turns a free-form prompt-following problem into a structured generate-check-repair-evaluate problem.
+
+### 2.2 Grammar Design for Controlled Prompt Generation
+
+The grammar is designed to generate prompts with controlled visual requirements. It is not intended to cover every possible user prompt; instead, it creates a manageable testbed where prompt requirements can be systematically generated, labeled, repaired, and analyzed. This controlled setting is important because the project goal is not to maximize prompt diversity, but to study whether partial prompt-following failures can be localized and improved in a stable way.
+
+A prompt is created by filling typed slots such as object category, number, attribute, spatial relation, and scene context. A representative template is:
+
+```text
+{prefix} exactly {number} {object_1_plural} {relation_text} a {object_2} {scene_context}.
+```
+
+For example, this template can be instantiated as:
+
+```text
+A realistic image of exactly 4 dice inside a cup on a shelf full of books and decorations.
+```
+
+This example makes the main grammar components easier to see: the template includes a number, a target object, a spatial relation, a reference object, and a scene context. Other prompt families use similar typed slots to generate attribute-only, cardinality-only, spatial-only, and combined prompts.
+
+The main grammar components are summarized below.
+
+| Grammar component | Examples in this project                                     | Purpose                                                      |
+| ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Prompt family     | single spatial, single attribute, single cardinality, spatial+attribute, spatial+cardinality, attribute+cardinality | Controls which types of visual requirements appear in a prompt |
+| Scene context     | simple, natural                                              | Tests whether clutter and context complexity affect prompt-following |
+| Object groups     | small items, containers, surfaces                            | Keeps object choices typed and compatible with relations     |
+| Attribute groups  | pattern/texture, material/finish                             | Avoids unnatural object-attribute combinations               |
+| Spatial relations | left/right, on top of/under, inside/outside                  | Uses relations that are natural and labelable                |
+| Numbers           | 3, 4, 5, 6                                                   | Tests exact cardinality control                              |
+
+The full grammar configuration is stored in [grammar_configs.yaml](../configs/grammar_config.yaml), with additional design notes in [grammar.md](../docs/grammar.md). In the writeup, I focus on the design choices and the resulting evaluation rather than listing every grammar template.
+
+### 2.3 From Prompt Instances to Atomic Constraints
+
+After a prompt is generated, the same grammar instance is used to derive atomic constraints. These constraints are the basic units for checking, repair, and evaluation.
+
+I use four representative constraint types in this project:
+
+| Constraint type  | Meaning                                                      | Example                                           |
+| ---------------- | ------------------------------------------------------------ | ------------------------------------------------- |
+| object_identity  | Whether the requested object category is clearly present and recognizable | Does the image contain clearly identifiable dice? |
+| cardinality      | Whether the requested number of target objects is visible and countable | Does the image contain exactly 4 dice?            |
+| attribute        | Whether the requested object has the required pattern, texture, material, or finish | Does the image show a glossy white cup?           |
+| spatial_relation | Whether two requested objects satisfy the required relation  | Are the dice inside the cup?                      |
+
+For the example prompt:
+
+```text
+A realistic image of exactly 4 dice inside a cup on a shelf full of books and decorations.
+```
+
+the grammar produces the following atomic constraints:
+
+| Prompt element  | Atomic constraint type | Constraint                                              |
+| --------------- | ---------------------- | ------------------------------------------------------- |
+| dice            | object_identity        | The image should contain clearly identifiable dice      |
+| cup             | object_identity        | The image should contain a clearly identifiable cup     |
+| exactly 4 dice  | cardinality            | The image should contain exactly 4 clearly visible dice |
+| dice inside cup | spatial_relation       | The dice should be inside the cup                       |
+
+Attribute constraints are generated in the same way when the prompt includes material, finish, pattern, or texture requirements. For example, a prompt containing “a glossy white cup” produces an attribute constraint checking whether the cup has the requested glossy white material or surface finish.
+
+This decomposition is what makes the problem measurable. Instead of assigning one label to the entire image, the system can ask which specific requirements were satisfied and which were not.
+
+### 2.4 Label Design and Human/VLM Checking
+
+Each atomic constraint receives one of three labels:
+
+| Label     | Meaning                                                  |
+| --------- | -------------------------------------------------------- |
+| pass      | The constraint is reasonably satisfied                   |
+| fail      | The constraint is clearly violated                       |
+| ambiguous | The constraint is uncertain or not confidently judgeable |
+
+The ambiguous label is important for generated images. In this project, ambiguity does not only mean that the image is blurry or occluded. It also includes cases where the model generates an object-like shape that looks plausible, but whose identity cannot be confidently determined.
+
+For example, the prompt below asks for thumbtacks:
+
+```text
+A realistic image of exactly 4 thumbtacks outside a food container on a picnic blanket with many small objects.
+```
+
+<img src="./assets/figure3_ambiguous_thumbtack.png" width="45%">
+
+**Figure 3.** Example of an ambiguous object-identity case. The image contains four red object-like shapes in the expected location, but it is difficult to confidently identify them as thumbtacks. I label this kind of case as ambiguous rather than forcing a pass/fail decision.
+
+Human labels are used as the ground-truth evaluation signal. A VLM checker is used to test whether the checking process can be automated at scale. Both humans and the VLM judge the same image-constraint pairs, which makes it possible to compare their agreement. However, VLM labels are not treated as final truth; they are used as automatic signals that can guide the next generation attempt.
+
+### 2.5 Constraint-Aware Repair Prompt Generation
+
+The repair stage uses the same constraint representation. When a constraint is labeled as fail or ambiguous, the system converts that constraint into a targeted repair instruction.
+
+The repaired prompt is constructed by keeping the original prompt and appending repair instructions for the failed or ambiguous constraints. For example, if the cardinality constraint fails for the dice prompt, the repair prompt keeps the original description and adds an instruction such as:
+
+```text
+Make sure there are exactly 4 dice; do not generate more or fewer, and keep them separated and countable.
+```
+
+This design avoids rewriting the entire prompt from scratch. Instead, the grammar identifies which part of the prompt failed and produces an instruction that directly targets that requirement.
+
+The repair instruction is generated according to the failed or ambiguous constraint type:
+
+| Constraint type  | Repair focus                                                 | Example repair instruction                                   |
+| ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| object_identity  | Make the requested object recognizable and avoid replacing it with a different category | Make sure the image clearly contains identifiable dice.      |
+| cardinality      | Enforce the exact count and keep target objects separated and countable | Make sure there are exactly 4 dice; do not generate more or fewer, and keep them separated and countable. |
+| attribute        | Apply the requested pattern, texture, material, or finish to the correct object | Make sure the cup has the glossy white material or surface finish. |
+| spatial_relation | Make the requested relation visually clear                   | Make sure the dice are clearly inside the cup.               |
+
+For constraints labeled as `ambiguous`, the repair instruction is phrased to make the requirement clear and easy to judge, rather than only asking the model to correct a clear failure. This is useful because ambiguous cases are not always clearly wrong; sometimes the generated image simply does not provide enough visual evidence.
+
+Overall, the repair approach follows the same grammar-level principle as the rest of the system: the unit of repair is not the entire image, but the specific visual requirement that failed or was uncertain.
 
 ## 3. Evaluation and Results
 
